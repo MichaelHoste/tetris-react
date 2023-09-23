@@ -23,12 +23,14 @@ class Tetris extends React.PureComponent {
     this.state = {
       grid:      this.initializeGrid(),
       piece:     this.randomPiece(),
-      positionX: 1,
-      positionY: 4,
+      positionX: this.WIDTH/2,
+      positionY: 0,
     }
   }
 
   componentDidMount() {
+    this.bindKeyboard()
+
     setInterval(this.moveDown.bind(this), 1000)
   }
 
@@ -38,11 +40,32 @@ class Tetris extends React.PureComponent {
     )
   }
 
+  bindKeyboard() {
+    document.onkeydown = (e) => {
+      switch(e.which) {
+        case 37: this.moveLeft(); break;
+        case 39: this.moveRight(); break;
+        case 38: this.rotatePiece(); break; // up
+        case 40: this.moveDown(); break;
+        break;
+        default: return; // exit this handler for other keys
+      }
+      e.preventDefault() // prevent the default action (scroll / move caret)
+    }
+  }
+
   randomPiece() {
     const pieces = [this.i, this.j, this.l, this.o, this.s, this.t, this.z]
     const piece  = pieces[Math.floor(Math.random() * pieces.length)]
 
     return piece()
+  }
+
+  rotatePiece() {
+    const piece = this.state.piece
+
+    this.setState({ piece: piece[0].map((val, index) => piece.map(row => row[index]).reverse()) })
+    //grid[0].map((val, index) => grid.map(row => row[row.length-1-index]));
   }
 
   i() {
@@ -101,8 +124,22 @@ class Tetris extends React.PureComponent {
     ];
   }
 
+  moveLeft() {
+    if(this.state.positionX > 0) {
+      this.setState({ positionX: this.state.positionX - 1 })
+    }
+  }
+
+  moveRight() {
+    if(this.state.positionX + this.state.piece[0].length < this.WIDTH) {
+      this.setState({ positionX: this.state.positionX + 1 })
+    }
+  }
+
   moveDown() {
-    this.setState({ positionY: this.state.positionY + 1 })
+    if(this.state.positionY + this.state.piece.length < this.HEIGHT) {
+      this.setState({ positionY: this.state.positionY + 1 })
+    }
   }
 
   colorForPosition(i, j) {
