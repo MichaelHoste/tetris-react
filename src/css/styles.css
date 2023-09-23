@@ -5,9 +5,25 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  background-color: #282c34;
+  user-select: none;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.tetris {
+  left: 50%;
+  position: relative;
+  margin-left: -200px;
+  margin-top: 30px;
+}
+
+.tetris .row {
+  clear: both;
+}
+
+.tetris .row .cell {
+  width: 40px;
+  height: 40px;
+  float: left;
+  border: 1px solid #1a14ad
 }
