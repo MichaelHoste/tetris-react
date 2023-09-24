@@ -54,10 +54,10 @@ class Tetris extends React.PureComponent {
   bindKeyboard() {
     document.onkeydown = (e) => {
       switch(e.which) {
-        case 37: this.moveLeft(); break;
+        case 37: this.moveLeft();  break;
         case 39: this.moveRight(); break;
-        case 38: this.rotatePiece(); break; // up
-        case 40: this.moveDown(); break;
+        case 38: this.rotate();    break; // up
+        case 40: this.moveDown();  break;
         default: return; // exit this handler for other keys
       }
       e.preventDefault() // prevent the default action (scroll / move caret)
@@ -69,12 +69,6 @@ class Tetris extends React.PureComponent {
     const piece  = pieces[Math.floor(Math.random() * pieces.length)]
 
     return piece()
-  }
-
-  rotatePiece() {
-    const piece = this.state.piece
-
-    this.setState({ piece: piece[0].map((val, index) => piece.map(row => row[index]).reverse()) })
   }
 
   hasCollision(grid, piece, positionX, positionY) {
@@ -146,6 +140,15 @@ class Tetris extends React.PureComponent {
     )
   }
 
+  canRotate(rotatedPiece) {
+    return !this.hasCollision(
+      this.state.grid,
+      rotatedPiece,
+      this.state.positionX,
+      this.state.positionY
+    )
+  }
+
   moveLeft() {
     if(this.canMoveLeft()) {
       this.setState({ positionX: this.state.positionX - 1 })
@@ -180,6 +183,15 @@ class Tetris extends React.PureComponent {
 
         this.throwNewPiece()
       })
+    }
+  }
+
+  rotate() {
+    const piece        = this.state.piece
+    const rotatedPiece = piece[0].map((val, index) => piece.map(row => row[index]).reverse())
+
+    if(this.canRotate(rotatedPiece)) {
+      this.setState({ piece: rotatedPiece })
     }
   }
 
