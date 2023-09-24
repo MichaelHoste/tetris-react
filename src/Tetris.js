@@ -16,13 +16,14 @@ class Tetris extends React.PureComponent {
       positionX: 0,
       positionY: 0,
     }
+
+    this.moveDown = this.moveDown.bind(this)
   }
 
   componentDidMount() {
     this.bindKeyboard()
     this.throwNewPiece()
-
-    setInterval(this.moveDown.bind(this), 1000)
+    this.startMovingDown()
   }
 
   emptyGrid() {
@@ -39,6 +40,14 @@ class Tetris extends React.PureComponent {
       positionX: parseInt((this.WIDTH - piece[0].length) / 2),
       positionY: -piece.length
     })
+  }
+
+  startMovingDown() {
+    this.moveDownInterval = setInterval(this.moveDown, 1000)
+  }
+
+  stopMovingDown() {
+    clearInterval(this.moveDownInterval)
   }
 
   bindKeyboard() {
@@ -153,10 +162,56 @@ class Tetris extends React.PureComponent {
       this.setState({ positionY: this.state.positionY + 1 })
     }
     else {
-      this.mergePieceToGrid(() =>
+      this.mergePieceToGrid(() => {
+        const completedLinesCount = this.completedLinesCount()
+
+        if(completedLinesCount > 0) {
+           this.stopMovingDown()
+
+           console.log(completedLinesCount)
+
+           this.setState({ completedLinesCount: completedLinesCount }, () => {
+             this.clearLines(() => {
+               this.startMovingDown()
+             })
+           })
+        }
+
         this.throwNewPiece()
-      )
+      })
     }
+  }
+
+  completedLinesCount() {
+    let count = 0
+
+    this.state.grid.forEach((row) => {
+      if (!row.includes(' ')) {
+        count += 1
+      }
+    })
+
+    return count
+  }
+
+  clearLines(callback) {
+    console.log("clearLines")
+
+    setTimeout(() => {
+      console.log("settimeout")
+      let newGrid  = this.emptyGrid()
+      const deltaY = this.state.completedLinesCount
+
+      for(let i = 0; i < this.HEIGHT; i++) {
+        for(let j = 0; j < this.WIDTH; j++) {
+          if(i - deltaY >= 0) {
+            newGrid[i][j] = this.state.grid[i-deltaY][j]
+          }
+        }
+      }
+
+      this.setState({ grid: newGrid }, callback)
+    }, 300)
   }
 
   colorForPosition(i, j) {
