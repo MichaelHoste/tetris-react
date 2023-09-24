@@ -1,9 +1,10 @@
 * clean lines
+* Prevent impossible rotations!
 * Better logical start line (size of piece)
 * End of game / Restart game
 * Count points
+* Accelerate tempo
 * Projection of move
 * Clearinterval/setinterval with each down move
 * Shortcut to drop (space?)
-* Pieces management (show next ones ? manage random?)
-
+* Pieces management (7-bag / 14-bag / 21-bag ?)

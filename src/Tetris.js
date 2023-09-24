@@ -11,10 +11,11 @@ class Tetris extends React.PureComponent {
     super(props)
 
     this.state = {
-      grid:      this.emptyGrid(),
-      piece:     [[]], // empty 2D piece
-      positionX: 0,
-      positionY: 0,
+      grid:             this.emptyGrid(),
+      piece:            [[]], // empty 2D piece
+      positionX:        0,
+      positionY:        0,
+      fullLinesIndices: []
     }
 
     this.moveDown = this.moveDown.bind(this)
@@ -88,7 +89,7 @@ class Tetris extends React.PureComponent {
           if(cellPositionY > this.HEIGHT - 1 || cellPositionX < 0 || cellPositionX > this.WIDTH - 1) { // Test grid boundaries
             collision = true
           }
-          else if(cellPositionY >= 0 && grid[cellPositionY][cellPositionX] != ' ') {                  // Test if overlap between plain piece cell and existing grid
+          else if(cellPositionY >= 0 && grid[cellPositionY][cellPositionX] != ' ') {                   // Test if overlap between plain piece cell and existing grid
             collision = true
           }
         }
@@ -163,14 +164,14 @@ class Tetris extends React.PureComponent {
     }
     else {
       this.mergePieceToGrid(() => {
-        const completedLinesCount = this.completedLinesCount()
+        const fullLinesIndices = this.detectFullLinesIndices()
 
-        if(completedLinesCount > 0) {
+        if(fullLinesIndices.length) {
            this.stopMovingDown()
 
-           console.log(completedLinesCount)
+           console.log(fullLinesIndices)
 
-           this.setState({ completedLinesCount: completedLinesCount }, () => {
+           this.setState({ fullLinesIndices: fullLinesIndices }, () => {
              this.clearLines(() => {
                this.startMovingDown()
              })
@@ -182,35 +183,38 @@ class Tetris extends React.PureComponent {
     }
   }
 
-  completedLinesCount() {
-    let count = 0
+  detectFullLinesIndices() {
+    let indices = []
 
-    this.state.grid.forEach((row) => {
+    this.state.grid.forEach((row, index) => {
       if (!row.includes(' ')) {
-        count += 1
+        indices.push(index)
       }
     })
 
-    return count
+    return indices
   }
 
   clearLines(callback) {
-    console.log("clearLines")
-
     setTimeout(() => {
-      console.log("settimeout")
-      let newGrid  = this.emptyGrid()
-      const deltaY = this.state.completedLinesCount
+      let newGrid = this.emptyGrid()
+      let offsetY = 0 // current number of lines to offset
 
-      for(let i = 0; i < this.HEIGHT; i++) {
-        for(let j = 0; j < this.WIDTH; j++) {
-          if(i - deltaY >= 0) {
-            newGrid[i][j] = this.state.grid[i-deltaY][j]
+      for(let i = this.HEIGHT - 1; i >= 0; i--) { // Iterate from bottom to top to increase offsetY with each full line encountered while copying
+        if(this.state.fullLinesIndices.includes(i)) {
+          offsetY += 1 // skip line!
+        }
+        else {
+          for(let j = 0; j < this.WIDTH; j++) {
+            newGrid[i+offsetY][j] = this.state.grid[i][j]
           }
         }
       }
 
-      this.setState({ grid: newGrid }, callback)
+      this.setState({
+        grid:             newGrid,
+        fullLinesIndices: []
+      }, callback)
     }, 300)
   }
 
@@ -219,7 +223,12 @@ class Tetris extends React.PureComponent {
 
     // If the cell is filled, use the corresponding color
     if(this.state.grid[i][j] !== ' ') {
-      letter = this.state.grid[i][j]
+      if(this.state.fullLinesIndices.includes(i)) {
+        letter = 'x' // position that will imminently disappear
+      }
+      else {
+        letter = this.state.grid[i][j]
+      }
     }
     else { // if the cell is empty, use the color of the falling piece if any
       const pieceI = i - this.state.positionY

@@ -7,7 +7,8 @@ class Pieces {
     s:   'green',
     t:   'fuchsia',
     z:   'red',
-    ' ': ''
+    x:   'lightgrey', // position that will imminently disappear
+    ' ': ''           // empty position
   }
 
   static i() {
