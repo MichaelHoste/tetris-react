@@ -1,6 +1,4 @@
-* Better logical start line (size of piece)
 * Projection of move
-* End of game / Restart game
 * Count points
 * Accelerate tempo
 * Clearinterval/setinterval with each down move

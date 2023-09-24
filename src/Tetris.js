@@ -15,7 +15,8 @@ class Tetris extends React.PureComponent {
       piece:            [[]], // empty 2D piece
       positionX:        0,
       positionY:        0,
-      fullLinesIndices: []
+      fullLinesIndices: [],
+      gameOver:         false
     }
 
     this.moveDown = this.moveDown.bind(this)
@@ -36,10 +37,21 @@ class Tetris extends React.PureComponent {
   throwNewPiece() {
     const piece = this.randomPiece()
 
+    let pieceBottomEmptyLines = 0
+
+    for(let i = piece.length - 1; i >= 0; i--) { // Iterate from bottom to top to detect empty lines
+      if(piece[i].every((cell) => cell == ' ')) {
+        pieceBottomEmptyLines += 1
+      }
+      else {
+        break
+      }
+    }
+
     this.setState({
       piece:     piece,
       positionX: parseInt((this.WIDTH - piece[0].length) / 2),
-      positionY: -piece.length
+      positionY: -piece.length + pieceBottomEmptyLines
     })
   }
 
@@ -184,8 +196,12 @@ class Tetris extends React.PureComponent {
   restart() {
     this.setState({
       grid:             this.emptyGrid(),
-      fullLinesIndices: []
-    }, this.throwNewPiece)
+      fullLinesIndices: [],
+      gameOver:         false
+    }, () => {
+      this.throwNewPiece()
+      this.startMovingDown()
+    })
   }
 
   mergePieceToGrid(callback) {
@@ -194,7 +210,7 @@ class Tetris extends React.PureComponent {
     const y     = this.state.positionY
 
     // clone grid
-    let grid  = this.state.grid.map((row) => Array.from(row))
+    let grid = this.state.grid.map((row) => Array.from(row))
 
     // Place piece in new grid
     piece.forEach((pieceRow, i) => {
@@ -214,16 +230,37 @@ class Tetris extends React.PureComponent {
     if(fullLinesIndices.length) {
        this.stopMovingDown()
 
-       console.log(fullLinesIndices)
-
        this.setState({ fullLinesIndices: fullLinesIndices }, () => {
          this.clearLines(() => {
+           this.throwNewPiece()
            this.startMovingDown()
          })
        })
     }
+    else if(this.isGameOver()) {
+      this.stopMovingDown()
+      this.setState({ gameOver: true })
+    }
+    else {
+      this.throwNewPiece()
+    }
+  }
 
-    this.throwNewPiece()
+  isGameOver() {
+    const piece            = this.state.piece
+    const gridFullToTheTop = this.state.grid[0].some((cell) => cell != ' ')
+    let   pieceIsBeyondTop = false
+
+    for(let i = 0; i < piece.length; i++) { // Iterate from top to bottom to find highest cell
+      if(!piece[i].every((cell) => cell == ' ')) {
+        pieceIsBeyondTop = this.state.positionY + i < 0
+        break
+      }
+    }
+
+    console.log(gridFullToTheTop, pieceIsBeyondTop)
+
+    return gridFullToTheTop && pieceIsBeyondTop
   }
 
   detectFullLinesIndices() {
@@ -258,7 +295,7 @@ class Tetris extends React.PureComponent {
         grid:             newGrid,
         fullLinesIndices: []
       }, callback)
-    }, 300)
+    }, 200)
   }
 
   colorForPosition(i, j) {
@@ -287,8 +324,11 @@ class Tetris extends React.PureComponent {
 
   render() {
     return (
-      <div className="tetris">
-        { this.renderGrid() }
+      <div className="tetris-container">
+        <div className="tetris">
+          { this.renderGrid() }
+        </div>
+        { this.renderGameOver() }
       </div>
     )
   }
@@ -314,8 +354,23 @@ class Tetris extends React.PureComponent {
 
     return (
       <div className={className} key={key} style={{ backgroundColor: this.colorForPosition(i, j) }}>
+        &nbsp;
       </div>
     )
+  }
+
+  renderGameOver() {
+    if(this.state.gameOver) {
+      return (
+        <div className="game-over">
+          Game Over
+          <br/>
+          <small>
+            Press 'r' to try again
+          </small>
+        </div>
+      )
+    }
   }
 }
 
