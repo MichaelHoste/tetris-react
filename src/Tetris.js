@@ -1,35 +1,26 @@
-import React from 'react';
+import React  from 'react';
+import Pieces from './utils/Pieces';
 
 import './css/styles.css';
 
 class Tetris extends React.PureComponent {
-  HEIGHT = 20;
-  WIDTH  = 10;
-
-  COLORS = {
-    i:   'aqua',
-    j:   'blue',
-    l:   'orange',
-    o:   'yellow',
-    s:   'green',
-    t:   'fuchsia',
-    z:   'red',
-    ' ': 'transparent'
-  }
+  HEIGHT = 20
+  WIDTH  = 10
 
   constructor(props) {
     super(props)
 
     this.state = {
       grid:      this.initializeGrid(),
-      piece:     this.randomPiece(),
-      positionX: this.WIDTH/2,
+      piece:     [[]], // empty 2D piece
+      positionX: 0,
       positionY: 0,
     }
   }
 
   componentDidMount() {
     this.bindKeyboard()
+    this.throwNewPiece()
 
     setInterval(this.moveDown.bind(this), 1000)
   }
@@ -47,7 +38,6 @@ class Tetris extends React.PureComponent {
         case 39: this.moveRight(); break;
         case 38: this.rotatePiece(); break; // up
         case 40: this.moveDown(); break;
-        break;
         default: return; // exit this handler for other keys
       }
       e.preventDefault() // prevent the default action (scroll / move caret)
@@ -55,7 +45,7 @@ class Tetris extends React.PureComponent {
   }
 
   randomPiece() {
-    const pieces = [this.i, this.j, this.l, this.o, this.s, this.t, this.z]
+    const pieces = [Pieces.i, Pieces.j, Pieces.l, Pieces.o, Pieces.s, Pieces.t, Pieces.z]
     const piece  = pieces[Math.floor(Math.random() * pieces.length)]
 
     return piece()
@@ -65,63 +55,6 @@ class Tetris extends React.PureComponent {
     const piece = this.state.piece
 
     this.setState({ piece: piece[0].map((val, index) => piece.map(row => row[index]).reverse()) })
-    //grid[0].map((val, index) => grid.map(row => row[row.length-1-index]));
-  }
-
-  i() {
-    return [
-      [' ', ' ', ' ', ' '],
-      ['i', 'i', 'i', 'i'],
-      [' ', ' ', ' ', ' '],
-      [' ', ' ', ' ', ' ']
-    ];
-  }
-
-  j() {
-    return [
-      ['j', ' ', ' '],
-      ['j', 'j', 'j'],
-      [' ', ' ', ' '],
-    ];
-  }
-
-  l() {
-    return [
-      [' ', ' ', 'l'],
-      ['l', 'l', 'l'],
-      [' ', ' ', ' '],
-    ];
-  }
-
-  o() {
-    return [
-      ['o', 'o'],
-      ['o', 'o'],
-    ];
-  }
-
-  s() {
-    return [
-      [' ', 's', 's'],
-      ['s', 's', ' '],
-      [' ', ' ', ' '],
-    ];
-  }
-
-  t() {
-    return [
-      [' ', 't', ' '],
-      ['t', 't', 't'],
-      [' ', ' ', ' '],
-    ];
-  }
-
-  z() {
-    return [
-      ['z', 'z', ' '],
-      [' ', 'z', 'z'],
-      [' ', ' ', ' '],
-    ];
   }
 
   moveLeft() {
@@ -136,16 +69,75 @@ class Tetris extends React.PureComponent {
     }
   }
 
+  canMoveDown() {
+    const piece = this.state.piece
+    const grid  = this.state.grid
+    const x     = this.state.positionX
+    const y     = this.state.positionY
+
+    let canMove = true
+
+    piece.forEach((pieceRow, i) => {
+      pieceRow.forEach((pieceCell, j) => {
+        if(pieceCell != ' ') {
+          const piecePositionY = y + i
+          if(piecePositionY + 1 >= this.HEIGHT || (piecePositionY + 1 >= 0 && grid[piecePositionY + 1][x + j] != ' ')) {
+            canMove = false
+          }
+        }
+      })
+    })
+
+    return canMove
+  }
+
   moveDown() {
-    if(this.state.positionY + this.state.piece.length < this.HEIGHT) {
+    if(this.canMoveDown()) {
       this.setState({ positionY: this.state.positionY + 1 })
     }
+    else {
+      this.mergePieceToGrid(() =>
+        this.throwNewPiece()
+      )
+    }
+  }
+
+  mergePieceToGrid(callback) {
+    const piece = this.state.piece
+    const x     = this.state.positionX
+    const y     = this.state.positionY
+
+    // clone grid
+    let grid  = this.state.grid.map((row) => Array.from(row))
+
+    // Copy piece to new grid
+    piece.forEach((pieceRow, i) => {
+      pieceRow.forEach((pieceCell, j) => {
+        if(pieceCell != ' ' &&  y + i >= 0) {
+          grid[y + i][x + j] = pieceCell
+        }
+      })
+    })
+
+    this.setState({ grid: grid }, callback)
+  }
+
+  throwNewPiece() {
+    this.setState({
+      piece:     this.randomPiece(),
+      positionX: this.WIDTH/2,
+      positionY: -3
+    })
   }
 
   colorForPosition(i, j) {
     let letter = ' '
 
-    if(this.state.grid[i][j] === ' ') { // nothing on the grid for now (except maybe the current piece)
+    // If the cell is filled, use the corresponding color
+    if(this.state.grid[i][j] !== ' ') {
+      letter = this.state.grid[i][j]
+    }
+    else { // if the cell is empty, use the color of the falling piece if any
       const pieceI = i - this.state.positionY
       const pieceJ = j - this.state.positionX
 
@@ -153,11 +145,8 @@ class Tetris extends React.PureComponent {
         letter = this.state.piece[pieceI][pieceJ]
       }
     }
-    else {
-      letter = this.state.grid[i][j]
-    }
 
-    return this.COLORS[letter]
+    return Pieces.COLORS[letter]
   }
 
   render() {
@@ -189,7 +178,6 @@ class Tetris extends React.PureComponent {
 
     return (
       <div className={className} key={key} style={{ backgroundColor: this.colorForPosition(i, j) }}>
-        &nbsp;
       </div>
     )
   }
