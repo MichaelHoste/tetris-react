@@ -1,8 +1,7 @@
 * Better logical start line (size of piece)
+* Projection of move
 * End of game / Restart game
 * Count points
 * Accelerate tempo
-* Projection of move
 * Clearinterval/setinterval with each down move
-* Shortcut to drop (space?)
 * Pieces management (7-bag / 14-bag / 21-bag ?)

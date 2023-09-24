@@ -44,6 +44,7 @@ class Tetris extends React.PureComponent {
   }
 
   startMovingDown() {
+    clearInterval(this.moveDownInterval) // to be sure (<React.StrictMode> and double mounting, I'm looking at you!)
     this.moveDownInterval = setInterval(this.moveDown, 1000)
   }
 
@@ -54,10 +55,12 @@ class Tetris extends React.PureComponent {
   bindKeyboard() {
     document.onkeydown = (e) => {
       switch(e.which) {
-        case 37: this.moveLeft();  break;
-        case 39: this.moveRight(); break;
-        case 38: this.rotate();    break; // up
-        case 40: this.moveDown();  break;
+        case 37: this.moveLeft();   break;
+        case 39: this.moveRight();  break;
+        case 38: this.rotate();     break; // up
+        case 40: this.moveDown();   break;
+        case 32: this.moveBottom(); break; // space
+        case 82: this.restart();    break; // r
         default: return; // exit this handler for other keys
       }
       e.preventDefault() // prevent the default action (scroll / move caret)
@@ -83,7 +86,7 @@ class Tetris extends React.PureComponent {
           if(cellPositionY > this.HEIGHT - 1 || cellPositionX < 0 || cellPositionX > this.WIDTH - 1) { // Test grid boundaries
             collision = true
           }
-          else if(cellPositionY >= 0 && grid[cellPositionY][cellPositionX] != ' ') {                   // Test if overlap between plain piece cell and existing grid
+          else if(cellPositionY >= 0 && grid[cellPositionY][cellPositionX] != ' ') { // Test if overlap between plain piece cell and existing grid
             collision = true
           }
         }
@@ -91,26 +94,6 @@ class Tetris extends React.PureComponent {
     })
 
     return collision
-  }
-
-  mergePieceToGrid(callback) {
-    const piece = this.state.piece
-    const x     = this.state.positionX
-    const y     = this.state.positionY
-
-    // clone grid
-    let grid  = this.state.grid.map((row) => Array.from(row))
-
-    // Place piece in new grid
-    piece.forEach((pieceRow, i) => {
-      pieceRow.forEach((pieceCell, j) => {
-        if(pieceCell != ' ' &&  y + i >= 0) {
-          grid[y + i][x + j] = pieceCell
-        }
-      })
-    })
-
-    this.setState({ grid: grid }, callback)
   }
 
   canMoveLeft() {
@@ -167,21 +150,7 @@ class Tetris extends React.PureComponent {
     }
     else {
       this.mergePieceToGrid(() => {
-        const fullLinesIndices = this.detectFullLinesIndices()
-
-        if(fullLinesIndices.length) {
-           this.stopMovingDown()
-
-           console.log(fullLinesIndices)
-
-           this.setState({ fullLinesIndices: fullLinesIndices }, () => {
-             this.clearLines(() => {
-               this.startMovingDown()
-             })
-           })
-        }
-
-        this.throwNewPiece()
+        this.triggerGameLogic()
       })
     }
   }
@@ -193,6 +162,68 @@ class Tetris extends React.PureComponent {
     if(this.canRotate(rotatedPiece)) {
       this.setState({ piece: rotatedPiece })
     }
+  }
+
+  moveBottom() {
+    const grid     = this.state.grid
+    const piece    = this.state.piece
+    const x        = this.state.positionX
+    let   currentY = this.state.positionY + 1
+
+    while(!this.hasCollision(grid, piece, x, currentY)) {
+      currentY += 1
+    }
+
+    this.setState({ positionY: currentY - 1 }, () =>
+      this.mergePieceToGrid(() => {
+        this.triggerGameLogic()
+      })
+    )
+  }
+
+  restart() {
+    this.setState({
+      grid:             this.emptyGrid(),
+      fullLinesIndices: []
+    }, this.throwNewPiece)
+  }
+
+  mergePieceToGrid(callback) {
+    const piece = this.state.piece
+    const x     = this.state.positionX
+    const y     = this.state.positionY
+
+    // clone grid
+    let grid  = this.state.grid.map((row) => Array.from(row))
+
+    // Place piece in new grid
+    piece.forEach((pieceRow, i) => {
+      pieceRow.forEach((pieceCell, j) => {
+        if(pieceCell != ' ' &&  y + i >= 0) {
+          grid[y + i][x + j] = pieceCell
+        }
+      })
+    })
+
+    this.setState({ grid: grid }, callback)
+  }
+
+  triggerGameLogic() {
+    const fullLinesIndices = this.detectFullLinesIndices()
+
+    if(fullLinesIndices.length) {
+       this.stopMovingDown()
+
+       console.log(fullLinesIndices)
+
+       this.setState({ fullLinesIndices: fullLinesIndices }, () => {
+         this.clearLines(() => {
+           this.startMovingDown()
+         })
+       })
+    }
+
+    this.throwNewPiece()
   }
 
   detectFullLinesIndices() {
