@@ -11,7 +11,7 @@ class Tetris extends React.PureComponent {
     super(props)
 
     this.state = {
-      grid:      this.initializeGrid(),
+      grid:      this.emptyGrid(),
       piece:     [[]], // empty 2D piece
       positionX: 0,
       positionY: 0,
@@ -25,10 +25,20 @@ class Tetris extends React.PureComponent {
     setInterval(this.moveDown.bind(this), 1000)
   }
 
-  initializeGrid() {
+  emptyGrid() {
     return Array.from({ length: this.HEIGHT }).map(() =>
       Array.from({ length: this.WIDTH }).fill(' ')
     )
+  }
+
+  throwNewPiece() {
+    const piece = this.randomPiece()
+
+    this.setState({
+      piece:     piece,
+      positionX: parseInt((this.WIDTH - piece[0].length) / 2),
+      positionY: -piece.length
+    })
   }
 
   bindKeyboard() {
@@ -57,49 +67,26 @@ class Tetris extends React.PureComponent {
     this.setState({ piece: piece[0].map((val, index) => piece.map(row => row[index]).reverse()) })
   }
 
-  moveLeft() {
-    if(this.state.positionX > 0) {
-      this.setState({ positionX: this.state.positionX - 1 })
-    }
-  }
-
-  moveRight() {
-    if(this.state.positionX + this.state.piece[0].length < this.WIDTH) {
-      this.setState({ positionX: this.state.positionX + 1 })
-    }
-  }
-
-  canMoveDown() {
-    const piece = this.state.piece
-    const grid  = this.state.grid
-    const x     = this.state.positionX
-    const y     = this.state.positionY
-
-    let canMove = true
+  hasCollision(grid, piece, positionX, positionY) {
+    let collision = false
 
     piece.forEach((pieceRow, i) => {
       pieceRow.forEach((pieceCell, j) => {
-        if(pieceCell != ' ') {
-          const piecePositionY = y + i
-          if(piecePositionY + 1 >= this.HEIGHT || (piecePositionY + 1 >= 0 && grid[piecePositionY + 1][x + j] != ' ')) {
-            canMove = false
+        if(!collision && pieceCell != ' ') { // ignore empty piece cell and skip of collision already detected
+          const cellPositionY = positionY + i
+          const cellPositionX = positionX + j
+
+          if(cellPositionY > this.HEIGHT - 1 || cellPositionX < 0 || cellPositionX > this.WIDTH - 1) { // Test grid boundaries
+            collision = true
+          }
+          else if(cellPositionY >= 0 && grid[cellPositionY][cellPositionX] != ' ') {                  // Test if overlap between plain piece cell and existing grid
+            collision = true
           }
         }
       })
     })
 
-    return canMove
-  }
-
-  moveDown() {
-    if(this.canMoveDown()) {
-      this.setState({ positionY: this.state.positionY + 1 })
-    }
-    else {
-      this.mergePieceToGrid(() =>
-        this.throwNewPiece()
-      )
-    }
+    return collision
   }
 
   mergePieceToGrid(callback) {
@@ -110,7 +97,7 @@ class Tetris extends React.PureComponent {
     // clone grid
     let grid  = this.state.grid.map((row) => Array.from(row))
 
-    // Copy piece to new grid
+    // Place piece in new grid
     piece.forEach((pieceRow, i) => {
       pieceRow.forEach((pieceCell, j) => {
         if(pieceCell != ' ' &&  y + i >= 0) {
@@ -122,12 +109,54 @@ class Tetris extends React.PureComponent {
     this.setState({ grid: grid }, callback)
   }
 
-  throwNewPiece() {
-    this.setState({
-      piece:     this.randomPiece(),
-      positionX: this.WIDTH/2,
-      positionY: -3
-    })
+  canMoveLeft() {
+    return !this.hasCollision(
+      this.state.grid,
+      this.state.piece,
+      this.state.positionX - 1,
+      this.state.positionY
+    )
+  }
+
+  canMoveRight() {
+    return !this.hasCollision(
+      this.state.grid,
+      this.state.piece,
+      this.state.positionX + 1,
+      this.state.positionY
+    )
+  }
+
+  canMoveDown() {
+    return !this.hasCollision(
+      this.state.grid,
+      this.state.piece,
+      this.state.positionX,
+      this.state.positionY + 1
+    )
+  }
+
+  moveLeft() {
+    if(this.canMoveLeft()) {
+      this.setState({ positionX: this.state.positionX - 1 })
+    }
+  }
+
+  moveRight() {
+    if(this.canMoveRight()) {
+      this.setState({ positionX: this.state.positionX + 1 })
+    }
+  }
+
+  moveDown() {
+    if(this.canMoveDown()) {
+      this.setState({ positionY: this.state.positionY + 1 })
+    }
+    else {
+      this.mergePieceToGrid(() =>
+        this.throwNewPiece()
+      )
+    }
   }
 
   colorForPosition(i, j) {
