@@ -1,4 +1,4 @@
-* Design (borders + nextpiece + current level)
+* Add nextpiece
 * Inputs
   * Clearinterval/setinterval with each down move (tetr.io/ don't do it but jstris do)
   * Pause inputs when clearing lines

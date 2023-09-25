@@ -10,39 +10,18 @@ body {
   user-select: none;
 }
 
-.game-over {
-  position: absolute;
-  width: 100%;
-  padding-top: 200px;
-  height: 100%;
-  background-color: #00000044;
-  color: whitesmoke;
-  font-size: 60px;
-  text-align: center;
-  text-shadow: 1px 1px 16px;
-}
-
-.score {
-  position: absolute;
-  width: 100%;
-  color: whitesmoke;
-  font-size: 45px;
-  text-align: center;
-  text-shadow: 1px 1px 16px;
-  top: 650px;
-  opacity: 0.8;
-}
-
-.score .level {
-  font-size: 15px;
-  color: #ababcd;
+.tetris-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: calc(100vh/2 - 654px/2); /* 616 is the container size */
 }
 
 .tetris {
-  position: absolute;
-  margin-top: 60px;
-  left: 50%;
-  margin-left: -140px; /* total is 10*26 for cells + 10*2 for borders */
+  position: relative;
+  box-sizing: border-box;
+  width: 288px;
+  overflow: hidden;
 
   box-shadow: 0px 0px 24px 0px #d3caec;
   clip-path: inset(0px -100px -100px -100px);
@@ -56,8 +35,9 @@ body {
 }
 
 .tetris .row .cell {
-  width: 26px;
-  height: 26px;
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
   float: left;
   border: 1px solid black; /*#050084;*/
   border-top: 0px;
@@ -71,4 +51,39 @@ body {
 
 .tetris .row:last-child .cell {
   border-bottom: 0px;
+}
+
+.game-over {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: #00000044;
+  color: whitesmoke;
+  font-size: 60px;
+  text-align: center;
+  text-shadow: 1px 1px 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.game-over small {
+  margin-bottom: 140px; /* Hack for better center of game-over */
+}
+
+.score {
+  margin-top: 20px;
+  color: whitesmoke;
+  font-size: 45px;
+  text-align: center;
+  text-shadow: 1px 1px 16px;
+  opacity: 0.8;
+}
+
+.score .level {
+  font-size: 15px;
+  color: #ababcd;
 }
