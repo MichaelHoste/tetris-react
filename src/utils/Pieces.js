@@ -1,14 +1,14 @@
 class Pieces {
   static COLORS = {
     i:   'aqua',
-    j:   'blue',
+    j:   '#6868ff', // blue
     l:   'orange',
     o:   'yellow',
-    s:   'green',
+    s:   '#17dc17', // green
     t:   'fuchsia',
     z:   'red',
     x:   'whitesmoke', // position that will imminently disappear
-    g:   '#3f3f3f',    // Ghost (lowest position of current piece)
+    g:   '#555555',    // Ghost (lowest position of current piece)
     ' ': ''            // empty position
   }
 
