@@ -1,5 +1,6 @@
-import React  from 'react';
-import Pieces from './utils/Pieces';
+import React   from 'react';
+import Pieces  from './utils/Pieces';
+import shuffle from './utils/FisherYatesShuffle'
 
 import './css/styles.css';
 
@@ -17,7 +18,8 @@ class Tetris extends React.PureComponent {
       positionY:        0,
       ghostPositionY:   0,
       fullLinesIndices: [],
-      gameOver:         false
+      gameOver:         false,
+      bags:             [this.generateBag7(), this.generateBag7()] // current 7-bag and next one
     }
 
     this.moveDown = this.moveDown.bind(this)
@@ -36,7 +38,7 @@ class Tetris extends React.PureComponent {
   }
 
   throwNewPiece() {
-    const piece = this.randomPiece()
+    const piece = this.takeNextPiece()
 
     let pieceBottomEmptyLines = 0
 
@@ -54,6 +56,27 @@ class Tetris extends React.PureComponent {
       positionX: parseInt((this.WIDTH - piece[0].length) / 2),
       positionY: -piece.length + pieceBottomEmptyLines
     }, this.refreshGhostPositionY)
+  }
+
+  generateBag7() {
+    return shuffle([Pieces.i, Pieces.j, Pieces.l, Pieces.o, Pieces.s, Pieces.t, Pieces.z])
+  }
+
+  takeNextPiece() {
+    const bag       = this.state.bags[0].map((piece) => piece) // clone first bag
+    const nextPiece = bag.pop() // take last piece (faster than first)
+    let   newBags   = null
+
+    if(bag.length) {
+      newBags = [bag, this.state.bags[1]]
+    }
+    else {
+      newBags = [this.state.bags[1], this.generateBag7()] // if first bag is now empty, use second bag and generate new one
+    }
+
+    this.setState({ bags: newBags })
+
+    return nextPiece()
   }
 
   startMovingDown() {
@@ -78,13 +101,6 @@ class Tetris extends React.PureComponent {
       }
       e.preventDefault() // prevent the default action (scroll / move caret)
     }
-  }
-
-  randomPiece() {
-    const pieces = [Pieces.i, Pieces.j, Pieces.l, Pieces.o, Pieces.s, Pieces.t, Pieces.z]
-    const piece  = pieces[Math.floor(Math.random() * pieces.length)]
-
-    return piece()
   }
 
   hasCollision(grid, piece, positionX, positionY) {
@@ -198,7 +214,8 @@ class Tetris extends React.PureComponent {
     this.setState({
       grid:             this.emptyGrid(),
       fullLinesIndices: [],
-      gameOver:         false
+      gameOver:         false,
+      bags:             [this.generateBag7(), this.generateBag7()]
     }, () => {
       this.throwNewPiece()
       this.startMovingDown()
