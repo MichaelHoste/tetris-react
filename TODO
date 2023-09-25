@@ -1,6 +1,6 @@
-* Inputs
-  * Clearinterval/setinterval with each down move
-  * Pause inputs when clearing lines
-* Accelerate tempo (levels)
 * Design (borders + nextpiece + current level)
+* Inputs
+  * Clearinterval/setinterval with each down move (tetr.io/ don't do it but jstris do)
+  * Pause inputs when clearing lines
 * Highlight last piece during merging?
+* Sound ? Music ?

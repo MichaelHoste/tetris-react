@@ -29,15 +29,20 @@ body {
   font-size: 45px;
   text-align: center;
   text-shadow: 1px 1px 16px;
-  padding-top: 720px;
+  top: 650px;
   opacity: 0.8;
+}
+
+.score .level {
+  font-size: 15px;
+  color: #ababcd;
 }
 
 .tetris {
   position: absolute;
   margin-top: 60px;
   left: 50%;
-  margin-left: -160px; /* total is 10*30 for cells + 10*2 for borders */
+  margin-left: -140px; /* total is 10*26 for cells + 10*2 for borders */
 }
 
 .tetris .row {
@@ -45,8 +50,8 @@ body {
 }
 
 .tetris .row .cell {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   float: left;
   border: 1px solid #050084;
 }

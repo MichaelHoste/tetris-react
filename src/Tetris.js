@@ -8,6 +8,7 @@ class Tetris extends React.PureComponent {
   HEIGHT = 20
   WIDTH  = 10
   SCORE  = [100, 300, 500, 800] // 1, 2, 3 or 4 lines
+  SPEED  = [1000, 800, 600, 400, 200, 100, 50]
 
   constructor(props) {
     super(props)
@@ -18,10 +19,12 @@ class Tetris extends React.PureComponent {
       positionX:        0,
       positionY:        0,
       ghostPositionY:   0,
-      fullLinesIndices: [],
+      fullLinesIndices: [], // For quick animation when complete lines are about to disappear
       gameOver:         false,
       bags:             [this.generateBag7(), this.generateBag7()], // current 7-bag and next one
-      score:            0
+      linesCount:       0, // number of cleared lines
+      score:            0,
+      level:            1
     }
 
     this.moveDown = this.moveDown.bind(this)
@@ -83,7 +86,7 @@ class Tetris extends React.PureComponent {
 
   startMovingDown() {
     clearInterval(this.moveDownInterval) // to be sure (<React.StrictMode> and double mounting, I'm looking at you!)
-    this.moveDownInterval = setInterval(this.moveDown, 1000)
+    this.moveDownInterval = setInterval(this.moveDown, this.SPEED[Math.min(this.state.level - 1, 6)])
   }
 
   stopMovingDown() {
@@ -218,7 +221,9 @@ class Tetris extends React.PureComponent {
       fullLinesIndices: [],
       gameOver:         false,
       bags:             [this.generateBag7(), this.generateBag7()],
-      score:            0
+      linesCount:       0,
+      score:            0,
+      level:            1
     }, () => {
       this.throwNewPiece()
       this.startMovingDown()
@@ -324,10 +329,17 @@ class Tetris extends React.PureComponent {
         }
       }
 
+      const newLinesCount = this.state.linesCount + offsetY
+      const linesScore    = offsetY != 0 ? this.SCORE[offsetY-1] : 0
+      const newScore      = this.state.score + linesScore * this.state.level
+      const newLevel      = this.state.linesCount % 10 > newLinesCount % 10 ? this.state.level + 1 : this.state.level // only if it passes the upper ten (modulo hack)
+
       this.setState({
         grid:             newGrid,
         fullLinesIndices: [],
-        score:            this.state.score + (offsetY != 0 ? this.SCORE[offsetY-1] : 0)
+        linesCount:       newLinesCount,
+        score:            newScore,
+        level:            newLevel
       }, callback)
     }, 200)
   }
@@ -409,6 +421,10 @@ class Tetris extends React.PureComponent {
     return (
       <div className="score">
         { this.state.score }
+
+        <div className="level">
+          Level {this.state.level}
+        </div>
       </div>
     )
   }
