@@ -1,7 +1,6 @@
-* Pieces management (7-bag / 14-bag / 21-bag ?)
-* Count points
 * Inputs
   * Clearinterval/setinterval with each down move
   * Pause inputs when clearing lines
-* Accelerate tempo
+* Accelerate tempo (levels)
+* Design (borders + nextpiece + current level)
 * Highlight last piece during merging?

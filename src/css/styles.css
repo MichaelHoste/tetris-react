@@ -10,7 +10,7 @@ body {
   user-select: none;
 }
 
-.tetris-container .game-over {
+.game-over {
   position: absolute;
   width: 100%;
   padding-top: 200px;
@@ -20,6 +20,17 @@ body {
   font-size: 60px;
   text-align: center;
   text-shadow: 1px 1px 16px;
+}
+
+.score {
+  position: absolute;
+  width: 100%;
+  color: whitesmoke;
+  font-size: 45px;
+  text-align: center;
+  text-shadow: 1px 1px 16px;
+  padding-top: 720px;
+  opacity: 0.8;
 }
 
 .tetris {

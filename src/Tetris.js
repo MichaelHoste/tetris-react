@@ -7,6 +7,7 @@ import './css/styles.css';
 class Tetris extends React.PureComponent {
   HEIGHT = 20
   WIDTH  = 10
+  SCORE  = [100, 300, 500, 800] // 1, 2, 3 or 4 lines
 
   constructor(props) {
     super(props)
@@ -19,7 +20,8 @@ class Tetris extends React.PureComponent {
       ghostPositionY:   0,
       fullLinesIndices: [],
       gameOver:         false,
-      bags:             [this.generateBag7(), this.generateBag7()] // current 7-bag and next one
+      bags:             [this.generateBag7(), this.generateBag7()], // current 7-bag and next one
+      score:            0
     }
 
     this.moveDown = this.moveDown.bind(this)
@@ -215,7 +217,8 @@ class Tetris extends React.PureComponent {
       grid:             this.emptyGrid(),
       fullLinesIndices: [],
       gameOver:         false,
-      bags:             [this.generateBag7(), this.generateBag7()]
+      bags:             [this.generateBag7(), this.generateBag7()],
+      score:            0
     }, () => {
       this.throwNewPiece()
       this.startMovingDown()
@@ -323,7 +326,8 @@ class Tetris extends React.PureComponent {
 
       this.setState({
         grid:             newGrid,
-        fullLinesIndices: []
+        fullLinesIndices: [],
+        score:            this.state.score + (offsetY != 0 ? this.SCORE[offsetY-1] : 0)
       }, callback)
     }, 200)
   }
@@ -369,6 +373,7 @@ class Tetris extends React.PureComponent {
         <div className="tetris">
           { this.renderGrid() }
         </div>
+        { this.renderScore() }
         { this.renderGameOver() }
       </div>
     )
@@ -396,6 +401,14 @@ class Tetris extends React.PureComponent {
     return (
       <div className={className} key={key} style={{ backgroundColor: this.colorForPosition(i, j) }}>
         &nbsp;
+      </div>
+    )
+  }
+
+  renderScore() {
+    return (
+      <div className="score">
+        { this.state.score }
       </div>
     )
   }
