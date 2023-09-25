@@ -15,6 +15,7 @@ class Tetris extends React.PureComponent {
       piece:            [[]], // empty 2D piece
       positionX:        0,
       positionY:        0,
+      ghostPositionY:   0,
       fullLinesIndices: [],
       gameOver:         false
     }
@@ -52,7 +53,7 @@ class Tetris extends React.PureComponent {
       piece:     piece,
       positionX: parseInt((this.WIDTH - piece[0].length) / 2),
       positionY: -piece.length + pieceBottomEmptyLines
-    })
+    }, this.refreshGhostPositionY)
   }
 
   startMovingDown() {
@@ -146,13 +147,13 @@ class Tetris extends React.PureComponent {
 
   moveLeft() {
     if(this.canMoveLeft()) {
-      this.setState({ positionX: this.state.positionX - 1 })
+      this.setState({ positionX: this.state.positionX - 1 }, this.refreshGhostPositionY)
     }
   }
 
   moveRight() {
     if(this.canMoveRight()) {
-      this.setState({ positionX: this.state.positionX + 1 })
+      this.setState({ positionX: this.state.positionX + 1 }, this.refreshGhostPositionY)
     }
   }
 
@@ -172,7 +173,7 @@ class Tetris extends React.PureComponent {
     const rotatedPiece = piece[0].map((val, index) => piece.map(row => row[index]).reverse())
 
     if(this.canRotate(rotatedPiece)) {
-      this.setState({ piece: rotatedPiece })
+      this.setState({ piece: rotatedPiece }, this.refreshGhostPositionY)
     }
   }
 
@@ -258,9 +259,21 @@ class Tetris extends React.PureComponent {
       }
     }
 
-    console.log(gridFullToTheTop, pieceIsBeyondTop)
-
     return gridFullToTheTop && pieceIsBeyondTop
+  }
+
+  // Detect here the lowest Y position where the piece can be
+  refreshGhostPositionY() {
+    const grid           = this.state.grid
+    const piece          = this.state.piece
+    const x              = this.state.positionX
+    let   ghostPositionY = this.state.positionY
+
+    while(!this.hasCollision(grid, piece, x, ghostPositionY)) {
+      ghostPositionY += 1
+    }
+
+    this.setState({ ghostPositionY: ghostPositionY - 1 })
   }
 
   detectFullLinesIndices() {
@@ -310,12 +323,23 @@ class Tetris extends React.PureComponent {
         letter = this.state.grid[i][j]
       }
     }
-    else { // if the cell is empty, use the color of the falling piece if any
+    else { // if the cell is empty, use the color of the falling piece or ghost
       const pieceI = i - this.state.positionY
       const pieceJ = j - this.state.positionX
 
+      const ghostI = i - this.state.ghostPositionY
+      const ghostJ = pieceJ
+
+      // Test if piece in that position
       if(this.state.piece[pieceI] && this.state.piece[pieceI][pieceJ]) {
         letter = this.state.piece[pieceI][pieceJ]
+      }
+
+      // If still no piece, test if ghost in that position
+      if(letter == ' ' && this.state.piece[ghostI] && this.state.piece[ghostI][ghostJ]) {
+        if(this.state.piece[ghostI][ghostJ] != ' ') {
+          letter = 'g'
+        }
       }
     }
 

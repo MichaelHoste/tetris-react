@@ -1,5 +1,7 @@
-* Projection of move
-* Count points
-* Accelerate tempo
-* Clearinterval/setinterval with each down move
 * Pieces management (7-bag / 14-bag / 21-bag ?)
+* Count points
+* Inputs
+  * Clearinterval/setinterval with each down move
+  * Pause inputs when clearing lines
+* Accelerate tempo
+* Highlight last piece during merging?

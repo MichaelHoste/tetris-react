@@ -8,6 +8,7 @@ class Pieces {
     t:   'fuchsia',
     z:   'red',
     x:   'whitesmoke', // position that will imminently disappear
+    g:   '#3f3f3f',    // Ghost (lowest position of current piece)
     ' ': ''            // empty position
   }
 

@@ -12,10 +12,10 @@ body {
 
 .tetris-container .game-over {
   position: absolute;
-  margin-top: 200px;
-  width: 500px;
-  left: 50%;
-  margin-left: -250px;
+  width: 100%;
+  padding-top: 200px;
+  height: 100%;
+  background-color: #00000044;
   color: whitesmoke;
   font-size: 60px;
   text-align: center;
