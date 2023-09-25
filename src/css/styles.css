@@ -18,23 +18,26 @@ body {
 }
 
 .tetris {
+  display: flex;
   position: relative;
-  box-sizing: border-box;
-  width: 288px;
-  overflow: hidden;
-
-  box-shadow: 0px 0px 24px 0px #d3caec;
-  clip-path: inset(0px -100px -100px -100px);
-
-  border: 4px solid #bdbdbd;
-  border-top: 0px;
 }
 
-.tetris .row {
+.tetris-grid {
+  box-sizing: border-box;
+  width: 288px;
+  margin-left: 150px;
+  box-shadow: 0px 0px 24px 0px #d3caec;
+  clip-path: inset(0px -100px -100px -100px);
+  border: 4px solid #bdbdbd;
+  border-top: 0px;
+  overflow: hidden;
+}
+
+.tetris-grid .row {
   clear: both;
 }
 
-.tetris .row .cell {
+.tetris-grid .row .cell {
   box-sizing: border-box;
   width: 28px;
   height: 28px;
@@ -45,11 +48,55 @@ body {
 }
 
 /* Hide external borders  */
-.tetris .row .cell:first-child {
+.tetris-grid .row .cell:first-child {
   border-left: 0px;
 }
 
-.tetris .row:last-child .cell {
+.tetris-grid .row:last-child .cell {
+  border-bottom: 0px;
+}
+
+.next-piece {
+  width: 150px;
+}
+
+.next-piece h2 {
+  margin-top: 0px;
+  margin-bottom: 30px;
+  color: whitesmoke;
+  font-size: 22px;
+  text-align: center;
+  text-shadow: 1px 1px 16px;
+  opacity: 0.8;
+}
+
+.next-piece .piece-row {
+  clear: both;
+}
+
+.next-piece .piece {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.next-piece .piece-row .piece-cell {
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  float: left;
+  border: 1px solid black; /*#050084;*/
+  border-top: 0px;
+  border-right: 0px;
+}
+
+/* Hide external borders  */
+.next-piece .piece-row .piece-cell:first-child {
+  border-left: 0px;
+}
+
+.next-piece .piece-row:last-child .cell {
   border-bottom: 0px;
 }
 
@@ -71,6 +118,7 @@ body {
 }
 
 .game-over small {
+  font-size: 42px;
   margin-bottom: 140px; /* Hack for better center of game-over */
 }
 

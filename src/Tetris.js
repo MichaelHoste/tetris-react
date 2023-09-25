@@ -379,11 +379,31 @@ class Tetris extends React.PureComponent {
     return Pieces.COLORS[letter]
   }
 
+  next3Pieces() {
+    // Take 3 next pieces from first bag (starting from last)
+    let pieces = this.state.bags[0].slice(-3).reverse()
+
+    // Merge the remaining pieces from next bag, still starting from last
+    if(pieces.length < 3) {
+      pieces = pieces.concat(
+        this.state.bags[1].slice(-3 + pieces.length).reverse()
+      )
+    }
+
+    return pieces.map((piece) => piece()) // need to call the function
+  }
+
   render() {
     return (
       <div className="tetris-container">
         <div className="tetris">
-          { this.renderGrid() }
+          <div className="tetris-grid">
+            { this.renderGrid() }
+          </div>
+          <div className="next-piece">
+            <h2>Next</h2>
+            { this.renderNextPieces() }
+          </div>
         </div>
         { this.renderScore() }
         { this.renderGameOver() }
@@ -441,6 +461,38 @@ class Tetris extends React.PureComponent {
         </div>
       )
     }
+  }
+
+  renderNextPieces() {
+    return this.next3Pieces().map((piece) => {
+      return (
+        <div className="piece">
+          { piece.map((row, i) => this.renderPieceRow(row, i)) }
+        </div>
+      )
+    })
+  }
+
+  renderPieceRow(row, i) {
+    const key       = `piece-row-${i}`
+    const className = `piece-row ${key}`
+
+    return (
+      <div className={className} key={key}>
+        { row.map((cell, j) => this.renderPieceCell(cell, i, j)) }
+      </div>
+    )
+  }
+
+  renderPieceCell(cell, i, j) {
+    const key       = `piece-cell-${i}-${j}`
+    const className = `piece-cell ${key}`
+
+    return (
+      <div className={className} key={key} style={{ backgroundColor: Pieces.COLORS[cell] }}>
+        &nbsp;
+      </div>
+    )
   }
 }
 
