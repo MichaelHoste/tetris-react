@@ -1,6 +1,7 @@
 * Title/explanation + forkme logo. https://tetris.80limit.com ReacTris
 * Highlight last piece during merging?
-* Inputs
-  * Pause inputs when clearing lines
 * Start droping of pieces above grid (use 2 more rows that are not displayed? Big change! Use OUTERHEIGHT when needed)
 * params to create a different grid height/width
+* Inputs
+  * Pause inputs when clearing lines
+  * p for pause ? (useful to debug)
