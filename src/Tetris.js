@@ -95,15 +95,21 @@ class Tetris extends React.PureComponent {
 
   bindKeyboard() {
     document.onkeydown = (e) => {
-      switch(e.which) {
-        case 37: this.moveLeft();   break;
-        case 39: this.moveRight();  break;
-        case 38: this.rotate();     break; // up
-        case 40: this.moveDown();   break;
-        case 32: this.moveBottom(); break; // space
-        case 82: this.restart();    break; // r
-        default: return; // exit this handler for other keys
+      if(!this.state.gameOver) {
+        switch(e.which) {
+          case 37: this.moveLeft();   break;
+          case 39: this.moveRight();  break;
+          case 38: this.rotate();     break; // up
+          case 40: this.moveDown();   break;
+          case 32: this.moveBottom(); break; // space
+          default: return; // exit this handler for other keys
+        }
       }
+
+      if(e.which == 82) { // r
+        this.restart()
+      }
+
       e.preventDefault() // prevent the default action (scroll / move caret)
     }
   }
@@ -390,7 +396,21 @@ class Tetris extends React.PureComponent {
       )
     }
 
-    return pieces.map((piece) => piece()) // need to call the function
+    // Need to call the function to generate piece
+    pieces = pieces.map((piece) => piece())
+
+    // Remove empty rows for better alignment
+    pieces.forEach((piece) => {
+      while(piece[0].every((cell) => cell == ' ')) {
+        piece.shift() // remove from start (only 'i')
+      }
+
+      while(piece[piece.length - 1].every((cell) => cell == ' ')) {
+        piece.pop() // remove from end (fast!)
+      }
+    })
+
+    return pieces
   }
 
   render() {
@@ -464,9 +484,9 @@ class Tetris extends React.PureComponent {
   }
 
   renderNextPieces() {
-    return this.next3Pieces().map((piece) => {
+    return this.next3Pieces().map((piece, i) => {
       return (
-        <div className="piece">
+        <div className="piece" key={i}>
           { piece.map((row, i) => this.renderPieceRow(row, i)) }
         </div>
       )
