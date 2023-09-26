@@ -1,7 +1,6 @@
 * Title/explanation + forkme logo. https://tetris.80limit.com ReacTris
-* Sound ? Music ? : drop, rotation, move left/right, move down, clearlines
 * Highlight last piece during merging?
 * Inputs
-  * Clearinterval/setinterval with each down move (tetr.io/ don't do it but jstris do)
   * Pause inputs when clearing lines
 * Start droping of pieces above grid (use 2 more rows that are not displayed? Big change! Use OUTERHEIGHT when needed)
+* params to create a different grid height/width

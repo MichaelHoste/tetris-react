@@ -26,11 +26,10 @@ class Tetris extends React.PureComponent {
       level:            1,
       fullLinesIndices: [] // For quick animation when complete lines are about to disappear
     }
-
-    this.moveDown = this.moveDown.bind(this)
   }
 
   componentDidMount() {
+    this.loadSounds()
     this.bindKeyboard()
     this.throwNewPiece()
     this.startMovingDown()
@@ -41,6 +40,38 @@ class Tetris extends React.PureComponent {
       Array.from({ length: this.WIDTH }).fill(' ')
     )
   }
+
+  loadSounds() {
+    this.moveSound     = new Audio('./sounds/move.mp3')
+    this.rotateSound   = new Audio('./sounds/rotate.mp3')
+    this.clearSound    = new Audio('./sounds/clear.mp3')
+    this.dropSound     = new Audio('./sounds/drop.mp3')
+    this.gameOverSound = new Audio('./sounds/gameover.mp3')
+    this.moveSound.volume     = 0.3
+    this.rotateSound.volume   = 0.4
+    this.clearSound.volume    = 0.5
+    this.dropSound.volume     = 0.1
+    this.gameOverSound.volume = 0.5
+  }
+
+  playSound(name) {
+    this[`${name}Sound`].pause()
+    this[`${name}Sound`].currentTime = 0
+    this[`${name}Sound`].play()
+  }
+
+  // // to fix bug !? https://stackoverflow.com/questions/36803176/how-to-prevent-the-play-request-was-interrupted-by-a-call-to-pause-error
+  // playSound(name) {
+  //   let sound = this[`${name}Sound`]
+
+  //   if(!sound.paused)
+  //     sound.pause()
+
+  //   sound.currentTime = 0
+
+  //   if(sound.paused)
+  //     sound.play()
+  // }
 
   throwNewPiece() {
     const piece = this.takeNextPiece()
@@ -86,7 +117,7 @@ class Tetris extends React.PureComponent {
 
   startMovingDown() {
     clearInterval(this.moveDownInterval) // to be sure (<React.StrictMode> and double mounting, I'm looking at you!)
-    this.moveDownInterval = setInterval(this.moveDown, this.SPEED[Math.min(this.state.level - 1, 6)])
+    this.moveDownInterval = setInterval(this.moveDown.bind(this, false), this.SPEED[Math.min(this.state.level - 1, 6)])
   }
 
   stopMovingDown() {
@@ -164,28 +195,39 @@ class Tetris extends React.PureComponent {
   }
 
   canRotate(rotatedPiece) {
-    return !this.hasCollision(
-      this.state.grid,
-      rotatedPiece,
-      this.state.positionX,
-      this.state.positionY
-    )
+    if(rotatedPiece[0].includes('o')) { // We don't want to rotate the square!
+      return false
+    }
+    else {
+      return !this.hasCollision(
+        this.state.grid,
+        rotatedPiece,
+        this.state.positionX,
+        this.state.positionY
+      )
+    }
   }
 
   moveLeft() {
     if(this.canMoveLeft()) {
+      this.playSound('move')
       this.setState({ positionX: this.state.positionX - 1 }, this.refreshGhostPositionY)
     }
   }
 
   moveRight() {
     if(this.canMoveRight()) {
+      this.playSound('move')
       this.setState({ positionX: this.state.positionX + 1 }, this.refreshGhostPositionY)
     }
   }
 
-  moveDown() {
+  moveDown(manualMove = true) {
     if(this.canMoveDown()) {
+      if(manualMove) {
+        this.playSound('move')
+      }
+
       this.setState({ positionY: this.state.positionY + 1 })
     }
     else {
@@ -200,6 +242,7 @@ class Tetris extends React.PureComponent {
     const rotatedPiece = piece[0].map((val, index) => piece.map(row => row[index]).reverse())
 
     if(this.canRotate(rotatedPiece)) {
+      this.playSound('rotate')
       this.setState({ piece: rotatedPiece }, this.refreshGhostPositionY)
     }
   }
@@ -209,6 +252,8 @@ class Tetris extends React.PureComponent {
     const piece    = this.state.piece
     const x        = this.state.positionX
     let   currentY = this.state.positionY + 1
+
+    this.playSound('drop')
 
     while(!this.hasCollision(grid, piece, x, currentY)) {
       currentY += 1
@@ -270,6 +315,7 @@ class Tetris extends React.PureComponent {
        })
     }
     else if(this.isGameOver()) {
+      this.playSound('gameOver')
       this.stopMovingDown()
       this.setState({ gameOver: true })
     }
@@ -320,6 +366,8 @@ class Tetris extends React.PureComponent {
   }
 
   clearLines(callback) {
+    this.playSound('clear')
+
     setTimeout(() => {
       let newGrid = this.emptyGrid()
       let offsetY = 0 // current number of lines to offset
