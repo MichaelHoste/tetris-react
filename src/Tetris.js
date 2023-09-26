@@ -102,7 +102,7 @@ class Tetris extends React.PureComponent {
           case 38: this.rotate();     break; // up
           case 40: this.moveDown();   break;
           case 32: this.moveBottom(); break; // space
-          default: return; // exit this handler for other keys
+          //default: return; // exit this handler for other keys
         }
       }
 
