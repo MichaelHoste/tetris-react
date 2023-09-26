@@ -15,16 +15,16 @@ class Tetris extends React.PureComponent {
 
     this.state = {
       grid:             this.emptyGrid(),
-      piece:            [[]], // empty 2D piece
+      piece:            [[]], // Empty 2D piece
       positionX:        0,
       positionY:        0,
       ghostPositionY:   0,
-      fullLinesIndices: [], // For quick animation when complete lines are about to disappear
       gameOver:         false,
-      bags:             [this.generateBag7(), this.generateBag7()], // current 7-bag and next one
-      linesCount:       0, // number of cleared lines
+      bags:             [this.generateBag7(), this.generateBag7()], // Current 7-bag and next one
+      linesCount:       0, // Total number of cleared lines
       score:            0,
-      level:            1
+      level:            1,
+      fullLinesIndices: [] // For quick animation when complete lines are about to disappear
     }
 
     this.moveDown = this.moveDown.bind(this)
@@ -224,12 +224,12 @@ class Tetris extends React.PureComponent {
   restart() {
     this.setState({
       grid:             this.emptyGrid(),
-      fullLinesIndices: [],
       gameOver:         false,
       bags:             [this.generateBag7(), this.generateBag7()],
       linesCount:       0,
       score:            0,
-      level:            1
+      level:            1,
+      fullLinesIndices: []
     }, () => {
       this.throwNewPiece()
       this.startMovingDown()
@@ -342,10 +342,10 @@ class Tetris extends React.PureComponent {
 
       this.setState({
         grid:             newGrid,
-        fullLinesIndices: [],
         linesCount:       newLinesCount,
         score:            newScore,
-        level:            newLevel
+        level:            newLevel,
+        fullLinesIndices: []
       }, callback)
     }, 200)
   }
@@ -506,7 +506,11 @@ class Tetris extends React.PureComponent {
 
   renderPieceCell(cell, i, j) {
     const key       = `piece-cell-${i}-${j}`
-    const className = `piece-cell ${key}`
+    let className = `piece-cell ${key}`
+
+    if(cell != ' ') {
+      className = `${className} piece-cell-full`
+    }
 
     return (
       <div className={className} key={key} style={{ backgroundColor: Pieces.COLORS[cell] }}>

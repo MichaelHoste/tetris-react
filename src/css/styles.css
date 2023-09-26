@@ -88,19 +88,14 @@ body {
   width: 22px;
   height: 22px;
   float: left;
-  border: 1px solid black; /*#050084;*/
   border-top: 0px;
   border-right: 0px;
 }
 
-/* Hide external borders  */
-.next-piece .piece-row .piece-cell:first-child {
-  border-left: 0px;
+.next-piece .piece-row .piece-cell-full {
+  border: 1px solid #222222;
 }
 
-.next-piece .piece-row:last-child .cell {
-  border-bottom: 0px;
-}
 
 .game-over {
   position: absolute;
