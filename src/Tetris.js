@@ -8,7 +8,7 @@ class Tetris extends React.PureComponent {
   HEIGHT = 20
   WIDTH  = 10
   SCORE  = [100, 300, 500, 800] // 1, 2, 3 or 4 lines
-  SPEED  = [1000, 800, 600, 400, 200, 100, 50]
+  SPEED  = [800, 600, 400, 200, 100, 50, 25]
 
   constructor(props) {
     super(props)
@@ -95,6 +95,10 @@ class Tetris extends React.PureComponent {
 
   bindKeyboard() {
     document.onkeydown = (e) => {
+      if(e.which == 82) { // r
+        this.restart()
+      }
+
       if(!this.state.gameOver) {
         switch(e.which) {
           case 37: this.moveLeft();   break;
@@ -102,12 +106,8 @@ class Tetris extends React.PureComponent {
           case 38: this.rotate();     break; // up
           case 40: this.moveDown();   break;
           case 32: this.moveBottom(); break; // space
-          //default: return; // exit this handler for other keys
+          default: return; // exit this handler for other keys
         }
-      }
-
-      if(e.which == 82) { // r
-        this.restart()
       }
 
       e.preventDefault() // prevent the default action (scroll / move caret)

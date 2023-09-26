@@ -1,5 +1,5 @@
-* Title/explanation + forkme logo. https://tetris.80limit.com
-* Sound ? Music ? : drop, rotation, move left/right, move down
+* Title/explanation + forkme logo. https://tetris.80limit.com ReacTris
+* Sound ? Music ? : drop, rotation, move left/right, move down, clearlines
 * Highlight last piece during merging?
 * Inputs
   * Clearinterval/setinterval with each down move (tetr.io/ don't do it but jstris do)
