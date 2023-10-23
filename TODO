@@ -1,5 +1,3 @@
-* p for pause ? (useful to debug)
-* extract next pieces into subcomponent
 * Use class instead of hardcoded colors (useful for future transitions)
 * Highlight last piece during merging (temporary keep positions and piece)
   + shaking
