@@ -44,16 +44,28 @@ body {
   position: relative;
 }
 
-.tetris-grid {
+.tetris-grids {
   box-sizing: border-box;
   margin-left: 150px;
-  box-shadow: 0px 0px 20px 1px #a399bd;
-  clip-path: inset(1px -100px -100px -100px);
-  border: 4px solid #bdbdbd;
+}
+
+.tetris-pre-grid {
+  height: 84px; /* 3 cells of 24 */
+  border: 4px solid transparent;
+  border-top: 0px;
+  border-bottom: 0px;
   overflow: hidden;
+}
+
+.tetris-grid {
+  background-color: #31353d;
+  box-shadow: 0px 0px 20px 1px #a399bd;
+  clip-path: inset(0.5px -100px -100px -100px);
+  border: 4px solid #bdbdbd;
   border-top: 0px;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
+  overflow: hidden;
 }
 
 .tetris-grid.shake {
@@ -69,18 +81,33 @@ body {
   100% { transform: translate(0px, 0px)  rotate(0deg); }
 }
 
+.tetris-pre-grid .row,
 .tetris-grid .row {
   clear: both;
 }
 
+.tetris-pre-grid .row .cell,
 .tetris-grid .row .cell {
   box-sizing: border-box;
   width: 28px;
   height: 28px;
   float: left;
-  border: 1px solid black; /*#050084;*/
-  border-top: 0px;
-  border-right: 0px;
+  border: 0.5px solid #222222;
+}
+
+.tetris-pre-grid .row .cell {
+  border: 0.5px solid transparent;
+}
+
+/* Borders are useful for piece cells out of the main grid */
+.tetris-pre-grid .i,
+.tetris-pre-grid .j,
+.tetris-pre-grid .l,
+.tetris-pre-grid .o,
+.tetris-pre-grid .s,
+.tetris-pre-grid .t,
+.tetris-pre-grid .z {
+  border: 0.5px solid black !important
 }
 
 /* Hide external borders  */
@@ -94,6 +121,7 @@ body {
 
 .next-pieces {
   width: 150px;
+  margin-top: 84px; /* height of pregrid */
 }
 
 .next-pieces h2 {

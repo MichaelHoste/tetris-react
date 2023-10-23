@@ -97,7 +97,7 @@ class Tetris extends React.PureComponent {
     this.setState({
       piece:     piece,
       positionX: parseInt((this.WIDTH - piece[0].length) / 2),
-      positionY: -piece.length + pieceBottomEmptyLines
+      positionY: -piece.length - 1 + pieceBottomEmptyLines
     }, this.refreshGhostPositionY)
   }
 
@@ -315,7 +315,7 @@ class Tetris extends React.PureComponent {
     const x     = this.state.positionX
     const y     = this.state.positionY
 
-    // clone grid
+    // Clone grid
     let grid = this.state.grid.map((row) => Array.from(row))
 
     // Place piece in new grid
@@ -444,7 +444,7 @@ class Tetris extends React.PureComponent {
     let classNames = []
 
     // 1. If grid is already filled at that position
-    if(this.state.grid[i][j] !== ' ') {
+    if(i >= 0 && this.state.grid[i][j] !== ' ') {
       // a. Add class of piece in cell
       classNames.push(this.state.grid[i][j])
 
@@ -453,7 +453,7 @@ class Tetris extends React.PureComponent {
         classNames.push('x')
       }
     }
-    // 2. If grid is empty at that position
+    // 2. If grid is empty at that position (works with cells above the game: i < 0)
     else {
       // a. Add class of current falling piece (if any at this position)
       const pieceI = i - this.state.positionY
@@ -486,14 +486,45 @@ class Tetris extends React.PureComponent {
     return (
       <div className="tetris-container">
         <div className="tetris">
-          <div className={tetrisGridClasses}>
-            { this.renderGrid() }
+          <div className="tetris-grids">
+            <div className="tetris-pre-grid">
+              { this.renderPreGrid() }
+            </div>
+            <div className={tetrisGridClasses}>
+              { this.renderGrid() }
+            </div>
           </div>
           <NextPieces bags={this.state.bags} />
         </div>
         { this.renderScore()    }
         { this.renderGameOver() }
         { this.renderPause()    }
+      </div>
+    )
+  }
+
+  renderPreGrid() {
+    return [-3, -2, -1].map((i) => this.renderPreGridRow(i))
+  }
+
+  renderPreGridRow(i) {
+    const key       = `row-${i}`
+    const className = `row ${key}`
+
+    return (
+      <div className={className} key={key}>
+        { Array.from({ length: this.WIDTH }).map((cell, j) => this.renderPreGridCell(i, j)) }
+      </div>
+    )
+  }
+
+  renderPreGridCell(i, j) {
+    const key       = `cell-${i}-${j}`
+    const className = `cell ${key} ${this.classNameForPosition(i, j)}`
+
+    return (
+      <div className={className} key={key}>
+        &nbsp;
       </div>
     )
   }
