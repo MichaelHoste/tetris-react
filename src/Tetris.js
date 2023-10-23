@@ -1,12 +1,12 @@
-import React from 'react';
+import React from 'react'
 
-import NextPieces from './components/NextPieces';
+import NextPieces from './components/NextPieces'
 
-import Pieces   from './utils/Pieces';
+import Pieces   from './utils/Pieces'
 import shuffle  from './utils/FisherYatesShuffle'
 import urlParam from './utils/UrlParam'
 
-import './css/styles.css';
+import './css/styles.css'
 
 class Tetris extends React.PureComponent {
   HEIGHT = urlParam('height', 20)
@@ -425,43 +425,44 @@ class Tetris extends React.PureComponent {
     }, 200)
   }
 
+  // Existing classes are the following:
   // i, j, l, o, s, t, z = Tetris pieces
   // x                   = Part of a complete line that will imminently disappear
   // g                   = Ghost (lowest position of current piece)
-  // ' '                 = Empty position
-  classForPosition(i, j) {
-    let letter = ' '
+  classNameForPosition(i, j) {
+    let classNames = []
 
-    // If the cell is filled, use the corresponding color
+    // 1. If grid is already filled at that position
     if(this.state.grid[i][j] !== ' ') {
+      // a. Add class of piece in cell
+      classNames.push(this.state.grid[i][j])
+
+      // b. If position is on currently full line, add 'x' class (will disappear soon)
       if(this.state.fullLinesIndices.includes(i)) {
-        letter = 'x' // position with full line that will imminently disappear
-      }
-      else {
-        letter = this.state.grid[i][j]
+        classNames.push('x')
       }
     }
-    else { // if the cell is empty, use the color of the falling piece or ghost
+    // 2. If grid is empty at that position
+    else {
+      // a. Add class of current falling piece (if any at this position)
       const pieceI = i - this.state.positionY
       const pieceJ = j - this.state.positionX
 
+      if(this.state.piece[pieceI] && this.state.piece[pieceI][pieceJ]) {
+        classNames.push(this.state.piece[pieceI][pieceJ])
+      }
+
+      // b. Add class of ghost (if any at this position)
       const ghostI = i - this.state.ghostPositionY
       const ghostJ = pieceJ
 
-      // Test if piece in that position
-      if(this.state.piece[pieceI] && this.state.piece[pieceI][pieceJ]) {
-        letter = this.state.piece[pieceI][pieceJ]
-      }
-
-      // If still no piece, test if ghost in that position
-      if(letter === ' ' && this.state.piece[ghostI] && this.state.piece[ghostI][ghostJ]) {
-        if(this.state.piece[ghostI][ghostJ] !== ' ') {
-          letter = 'g'
-        }
+      if(this.state.piece[ghostI] && this.state.piece[ghostI][ghostJ] && this.state.piece[ghostI][ghostJ] !== ' ') {
+        classNames.push('g')
+        classNames.push(`g-${this.state.piece[ghostI][ghostJ]}`)
       }
     }
 
-    return letter
+    return classNames.join(' ')
   }
 
   render() {
@@ -497,7 +498,7 @@ class Tetris extends React.PureComponent {
 
   renderCell(cell, i, j) {
     const key       = `cell-${i}-${j}`
-    const className = `cell ${key} ${this.classForPosition(i, j)}`
+    const className = `cell ${key} ${this.classNameForPosition(i, j)}`
 
     return (
       <div className={className} key={key}>

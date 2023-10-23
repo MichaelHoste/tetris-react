@@ -35,7 +35,14 @@ body {
   border-bottom-right-radius: 8px;
 }
 
-/* Tetris pieces colors */
+/*---------------------------------------------*/
+/* Colors by drawing priority (don't reorder!) */
+/*---------------------------------------------*/
+
+/* Ghost (lowest position of current piece) */
+.g { background-color: #555555 }
+
+/* Tetris standard pieces colors */
 .i { background-color: aqua    }
 .j { background-color: #6868ff } /* blue */
 .l { background-color: orange  }
@@ -44,9 +51,10 @@ body {
 .t { background-color: fuchsia }
 .z { background-color: red     }
 
-/* Special in-game colors */
-.x { background-color: whitesmoke } /* Part of a complete line that will imminently disappear */
-.g { background-color: #555555    } /* Ghost (lowest position of current piece) */
+/* Part of a complete line that will imminently disappear */
+.x { background-color: whitesmoke }
+
+/*-------------------------------------*/
 
 .tetris-grid .row {
   clear: both;
