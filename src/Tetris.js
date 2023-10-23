@@ -425,13 +425,17 @@ class Tetris extends React.PureComponent {
     }, 200)
   }
 
-  colorForPosition(i, j) {
+  // i, j, l, o, s, t, z = Tetris pieces
+  // x                   = Part of a complete line that will imminently disappear
+  // g                   = Ghost (lowest position of current piece)
+  // ' '                 = Empty position
+  classForPosition(i, j) {
     let letter = ' '
 
     // If the cell is filled, use the corresponding color
     if(this.state.grid[i][j] !== ' ') {
       if(this.state.fullLinesIndices.includes(i)) {
-        letter = 'x' // position that will imminently disappear
+        letter = 'x' // position with full line that will imminently disappear
       }
       else {
         letter = this.state.grid[i][j]
@@ -457,7 +461,7 @@ class Tetris extends React.PureComponent {
       }
     }
 
-    return Pieces.COLORS[letter]
+    return letter
   }
 
   render() {
@@ -493,10 +497,10 @@ class Tetris extends React.PureComponent {
 
   renderCell(cell, i, j) {
     const key       = `cell-${i}-${j}`
-    const className = `cell ${key}`
+    const className = `cell ${key} ${this.classForPosition(i, j)}`
 
     return (
-      <div className={className} key={key} style={{ backgroundColor: this.colorForPosition(i, j) }}>
+      <div className={className} key={key}>
         &nbsp;
       </div>
     )

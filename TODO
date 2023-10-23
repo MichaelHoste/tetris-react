@@ -1,4 +1,3 @@
-* Use class instead of hardcoded colors (useful for future transitions)
 * Highlight last piece during merging (temporary keep positions and piece)
   + shaking
 * Title/explanation + forkme logo. https://tetris.80limit.com ReacTris

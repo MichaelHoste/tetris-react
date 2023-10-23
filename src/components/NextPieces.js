@@ -1,15 +1,6 @@
 import React from 'react';
 
-import Pieces from '../utils/Pieces';
-
 class NextPieces extends React.PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-    }
-  }
-
   next3Pieces() {
     // Take 3 next pieces from first bag (starting from last)
     let pieces = this.props.bags[0].slice(-3).reverse()
@@ -40,7 +31,7 @@ class NextPieces extends React.PureComponent {
 
   render() {
     return(
-      <div className="next-piece">
+      <div className="next-pieces">
         <h2>Next</h2>
         { this.renderNextPieces() }
       </div>
@@ -69,15 +60,15 @@ class NextPieces extends React.PureComponent {
   }
 
   renderPieceCell(cell, i, j) {
-    const key       = `piece-cell-${i}-${j}`
-    let className = `piece-cell ${key}`
+    const key     = `piece-cell-${i}-${j}`
+    let className = `piece-cell ${key} ${cell}`
 
     if(cell !== ' ') {
       className = `${className} piece-cell-full`
     }
 
     return (
-      <div className={className} key={key} style={{ backgroundColor: Pieces.COLORS[cell] }}>
+      <div className={className} key={key}>
         &nbsp;
       </div>
     )

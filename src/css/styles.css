@@ -35,6 +35,19 @@ body {
   border-bottom-right-radius: 8px;
 }
 
+/* Tetris pieces colors */
+.i { background-color: aqua    }
+.j { background-color: #6868ff } /* blue */
+.l { background-color: orange  }
+.o { background-color: yellow  }
+.s { background-color: #17dc17 } /* green */
+.t { background-color: fuchsia }
+.z { background-color: red     }
+
+/* Special in-game colors */
+.x { background-color: whitesmoke } /* Part of a complete line that will imminently disappear */
+.g { background-color: #555555    } /* Ghost (lowest position of current piece) */
+
 .tetris-grid .row {
   clear: both;
 }
@@ -58,11 +71,11 @@ body {
   border-bottom: 0px;
 }
 
-.next-piece {
+.next-pieces {
   width: 150px;
 }
 
-.next-piece h2 {
+.next-pieces h2 {
   margin-top: 0px;
   margin-bottom: 40px;
   color: whitesmoke;
@@ -72,18 +85,18 @@ body {
   opacity: 0.8;
 }
 
-.next-piece .piece-row {
+.next-pieces .piece-row {
   clear: both;
 }
 
-.next-piece .piece {
+.next-pieces .piece {
   display: flex;
   align-items: center;
   flex-direction: column;
   margin-bottom: 35px;
 }
 
-.next-piece .piece-row .piece-cell {
+.next-pieces .piece-row .piece-cell {
   box-sizing: border-box;
   width: 22px;
   height: 22px;
@@ -92,7 +105,7 @@ body {
   border-right: 0px;
 }
 
-.next-piece .piece-row .piece-cell-full {
+.next-pieces .piece-row .piece-cell-full {
   border: 1px solid #222222;
 }
 
