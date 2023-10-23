@@ -341,7 +341,8 @@ class Tetris extends React.PureComponent {
   triggerGameLogic() {
     const fullLinesIndices = this.detectFullLinesIndices()
 
-    if(fullLinesIndices.length) {
+    // Only if new line founds (and not already in state waiting to be removed)
+    if(fullLinesIndices.length && !this.state.fullLinesIndices.length) {
        this.stopMovingDown()
        this.shakeGame()
 

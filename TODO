@@ -1,10 +1,12 @@
+* Deployment https://tetris.80limit.com or https://tetris-react.80limit.com
+* README
 * Title/explanation + forkme logo. https://tetris.80limit.com ReacTris
+* Pause inputs when clearing lines (should be easy in `clearLines`)
 * Reset timer when droping new piece! (or the new piece could immediatly move)
 * Highlight last piece during merging (temporary keep positions and piece)
   => useful when moving down manually and also when triggering merge with space
 * Don't prevent to rotate on left/right part of game (push left/right to create space to rotate)
 * Dissociate movedown timing, and merge timing!
-* Pause inputs when clearing lines (should be easy in `clearLines`)
 * Implement T-Spins: https://tetris.wiki/T-Spin
 * Hold piece (on the left)
 * Mobile version
