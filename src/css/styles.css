@@ -42,6 +42,7 @@ body {
 .tetris {
   display: flex;
   position: relative;
+  margin-top: -50px;
 }
 
 .tetris-grids {
