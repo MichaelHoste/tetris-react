@@ -15,17 +15,17 @@ class Tetris extends React.PureComponent {
     super(props)
 
     this.state = {
-      grid:             this.emptyGrid(),
+      grid:             this.emptyGrid(), // x left-right, y top-down
       piece:            [[]], // Empty 2D piece
-      positionX:        0,
-      positionY:        0,
+      positionX:        0,    // top left x position of piece on grid
+      positionY:        0,    // top left y position of piece on grid
       ghostPositionY:   0,
-      gameOver:         false,
-      bags:             [this.generateBag7(), this.generateBag7()], // Current 7-bag and next one
-      linesCount:       0, // Total number of cleared lines
+      bags:             [this.generateBag7(), this.generateBag7()], // Current set of piece and next one
+      linesCount:       0, // Total number of cleared lines (to update current level)
       score:            0,
       level:            1,
-      fullLinesIndices: [] // For quick animation when complete lines are about to disappear
+      fullLinesIndices: [], // For quick animation when complete lines are about to disappear
+      gameOver:         false
     }
   }
 
@@ -80,7 +80,7 @@ class Tetris extends React.PureComponent {
     let pieceBottomEmptyLines = 0
 
     for(let i = piece.length - 1; i >= 0; i--) { // Iterate from bottom to top to detect empty lines
-      if(piece[i].every((cell) => cell == ' ')) {
+      if(piece[i].every((cell) => cell === ' ')) {
         pieceBottomEmptyLines += 1
       }
       else {
@@ -127,7 +127,7 @@ class Tetris extends React.PureComponent {
 
   bindKeyboard() {
     document.onkeydown = (e) => {
-      if(e.which == 82) { // r
+      if(e.which === 82) { // r
         this.restart()
       }
 
@@ -151,14 +151,14 @@ class Tetris extends React.PureComponent {
 
     piece.forEach((pieceRow, i) => {
       pieceRow.forEach((pieceCell, j) => {
-        if(!collision && pieceCell != ' ') { // ignore empty piece cell and skip of collision already detected
+        if(!collision && pieceCell !== ' ') { // ignore empty piece cell and skip of collision already detected
           const cellPositionY = positionY + i
           const cellPositionX = positionX + j
 
           if(cellPositionY > this.HEIGHT - 1 || cellPositionX < 0 || cellPositionX > this.WIDTH - 1) { // Test grid boundaries
             collision = true
           }
-          else if(cellPositionY >= 0 && grid[cellPositionY][cellPositionX] != ' ') { // Test if overlap between plain piece cell and existing grid
+          else if(cellPositionY >= 0 && grid[cellPositionY][cellPositionX] !== ' ') { // Test if overlap between plain piece cell and existing grid
             collision = true
           }
         }
@@ -270,12 +270,12 @@ class Tetris extends React.PureComponent {
   restart() {
     this.setState({
       grid:             this.emptyGrid(),
-      gameOver:         false,
       bags:             [this.generateBag7(), this.generateBag7()],
       linesCount:       0,
       score:            0,
       level:            1,
-      fullLinesIndices: []
+      fullLinesIndices: [],
+      gameOver:         false,
     }, () => {
       this.throwNewPiece()
       this.startMovingDown()
@@ -293,7 +293,7 @@ class Tetris extends React.PureComponent {
     // Place piece in new grid
     piece.forEach((pieceRow, i) => {
       pieceRow.forEach((pieceCell, j) => {
-        if(pieceCell != ' ' &&  y + i >= 0) {
+        if(pieceCell !== ' ' &&  y + i >= 0) {
           grid[y + i][x + j] = pieceCell
         }
       })
@@ -327,11 +327,11 @@ class Tetris extends React.PureComponent {
 
   isGameOver() {
     const piece            = this.state.piece
-    const gridFullToTheTop = this.state.grid[0].some((cell) => cell != ' ')
+    const gridFullToTheTop = this.state.grid[0].some((cell) => cell !== ' ')
     let   pieceIsBeyondTop = false
 
     for(let i = 0; i < piece.length; i++) { // Iterate from top to bottom to find highest cell
-      if(!piece[i].every((cell) => cell == ' ')) {
+      if(!piece[i].every((cell) => cell === ' ')) {
         pieceIsBeyondTop = this.state.positionY + i < 0
         break
       }
@@ -385,7 +385,7 @@ class Tetris extends React.PureComponent {
       }
 
       const newLinesCount = this.state.linesCount + offsetY
-      const linesScore    = offsetY != 0 ? this.SCORE[offsetY-1] : 0
+      const linesScore    = offsetY !== 0 ? this.SCORE[offsetY-1] : 0
       const newScore      = this.state.score + linesScore * this.state.level
       const newLevel      = this.state.linesCount % 10 > newLinesCount % 10 ? this.state.level + 1 : this.state.level // only if it passes the upper ten (modulo hack)
 
@@ -424,8 +424,8 @@ class Tetris extends React.PureComponent {
       }
 
       // If still no piece, test if ghost in that position
-      if(letter == ' ' && this.state.piece[ghostI] && this.state.piece[ghostI][ghostJ]) {
-        if(this.state.piece[ghostI][ghostJ] != ' ') {
+      if(letter === ' ' && this.state.piece[ghostI] && this.state.piece[ghostI][ghostJ]) {
+        if(this.state.piece[ghostI][ghostJ] !== ' ') {
           letter = 'g'
         }
       }
@@ -450,11 +450,11 @@ class Tetris extends React.PureComponent {
 
     // Remove empty rows for better alignment
     pieces.forEach((piece) => {
-      while(piece[0].every((cell) => cell == ' ')) {
+      while(piece[0].every((cell) => cell === ' ')) {
         piece.shift() // remove from start (only 'i')
       }
 
-      while(piece[piece.length - 1].every((cell) => cell == ' ')) {
+      while(piece[piece.length - 1].every((cell) => cell === ' ')) {
         piece.pop() // remove from end (fast!)
       }
     })
@@ -557,7 +557,7 @@ class Tetris extends React.PureComponent {
     const key       = `piece-cell-${i}-${j}`
     let className = `piece-cell ${key}`
 
-    if(cell != ' ') {
+    if(cell !== ' ') {
       className = `${className} piece-cell-full`
     }
 

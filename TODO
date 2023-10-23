@@ -1,7 +1,11 @@
+* p for pause ? (useful to debug)
+* extract next pieces into subcomponent
+* Use class instead of hardcoded colors (useful for future transitions)
+* Highlight last piece during merging (temporary keep positions and piece)
+  + shaking
 * Title/explanation + forkme logo. https://tetris.80limit.com ReacTris
-* Highlight last piece during merging?
 * Start droping of pieces above grid (use 2 more rows that are not displayed? Big change! Use OUTERHEIGHT when needed)
-* params to create a different grid height/width
+* Hold piece (on the left)
 * Inputs
   * Pause inputs when clearing lines
-  * p for pause ? (useful to debug)
+
