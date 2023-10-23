@@ -9,10 +9,11 @@ import urlParam from './utils/UrlParam'
 import './css/styles.css'
 
 class Tetris extends React.PureComponent {
-  HEIGHT = urlParam('height', 20)
-  WIDTH  = urlParam('width',  10)
-  SCORE  = [100, 300, 500, 800] // 1, 2, 3 or 4 lines
-  SPEED  = [800, 600, 400, 200, 100, 50, 25]
+  HEIGHT      = urlParam('height', 20)
+  WIDTH       = urlParam('width',  10)
+  SCORE       = [100, 300, 500, 800] // 1, 2, 3 or 4 lines
+  SPEED       = [800, 600, 400, 200, 100, 50, 25]
+  CLEAR_DELAY = 200
 
   constructor(props) {
     super(props)
@@ -28,8 +29,9 @@ class Tetris extends React.PureComponent {
       score:            0,
       level:            1,
       fullLinesIndices: [], // For quick animation when complete lines are about to disappear
+      shake:            false,
       gameOver:         false,
-      pause:            false
+      pause:            false,
     }
   }
 
@@ -328,11 +330,20 @@ class Tetris extends React.PureComponent {
     this.setState({ grid: grid }, callback)
   }
 
+  shakeGame() {
+    this.setState({ shake: true }, () => {
+      setTimeout(() => {
+        this.setState({ shake: false })
+      }, 100) /* Same as animation */
+    })
+  }
+
   triggerGameLogic() {
     const fullLinesIndices = this.detectFullLinesIndices()
 
     if(fullLinesIndices.length) {
        this.stopMovingDown()
+       this.shakeGame()
 
        this.setState({ fullLinesIndices: fullLinesIndices }, () => {
          this.clearLines(() => {
@@ -422,7 +433,7 @@ class Tetris extends React.PureComponent {
         level:            newLevel,
         fullLinesIndices: []
       }, callback)
-    }, 200)
+    }, this.CLEAR_DELAY)
   }
 
   // Existing classes are the following:
@@ -466,10 +477,16 @@ class Tetris extends React.PureComponent {
   }
 
   render() {
+    let tetrisGridClasses = 'tetris-grid'
+
+    if(this.state.shake) {
+      tetrisGridClasses += ' shake'
+    }
+
     return (
       <div className="tetris-container">
         <div className="tetris">
-          <div className="tetris-grid">
+          <div className={tetrisGridClasses}>
             { this.renderGrid() }
           </div>
           <NextPieces bags={this.state.bags} />

@@ -10,6 +10,27 @@ body {
   user-select: none;
 }
 
+/*---------------------------------------------*/
+/* Colors by drawing priority (don't reorder!) */
+/*---------------------------------------------*/
+
+/* Ghost (lowest position of current piece) */
+.g { background-color: #555555 }
+
+/* Tetris standard pieces colors */
+.i { background-color: aqua    }
+.j { background-color: #6868ff } /* blue */
+.l { background-color: orange  }
+.o { background-color: yellow  }
+.s { background-color: #17dc17 } /* green */
+.t { background-color: fuchsia }
+.z { background-color: red     }
+
+/* Part of a complete line that will imminently disappear */
+.x { background-color: whitesmoke }
+
+/*-------------------------------------*/
+
 .tetris-container {
   display: flex;
   align-items: center;
@@ -35,26 +56,18 @@ body {
   border-bottom-right-radius: 8px;
 }
 
-/*---------------------------------------------*/
-/* Colors by drawing priority (don't reorder!) */
-/*---------------------------------------------*/
+.tetris-grid.shake {
+  animation: tilt-n-move-shaking 0.1s;
+  animation-timing-function: ease-in-out;
+}
 
-/* Ghost (lowest position of current piece) */
-.g { background-color: #555555 }
-
-/* Tetris standard pieces colors */
-.i { background-color: aqua    }
-.j { background-color: #6868ff } /* blue */
-.l { background-color: orange  }
-.o { background-color: yellow  }
-.s { background-color: #17dc17 } /* green */
-.t { background-color: fuchsia }
-.z { background-color: red     }
-
-/* Part of a complete line that will imminently disappear */
-.x { background-color: whitesmoke }
-
-/*-------------------------------------*/
+@keyframes tilt-n-move-shaking {
+  0%   { transform: translate(0px, 0px)  rotate(0deg); }
+  25%  { transform: translate(0px, 4px)  rotate(0deg); }
+  50%  { transform: translate(0px, 0)    rotate(0deg); }
+  75%  { transform: translate(0px, -4px) rotate(0deg); }
+  100% { transform: translate(0px, 0px)  rotate(0deg); }
+}
 
 .tetris-grid .row {
   clear: both;
