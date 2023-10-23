@@ -25,7 +25,8 @@ class Tetris extends React.PureComponent {
       score:            0,
       level:            1,
       fullLinesIndices: [], // For quick animation when complete lines are about to disappear
-      gameOver:         false
+      gameOver:         false,
+      pause:            false
     }
   }
 
@@ -48,11 +49,11 @@ class Tetris extends React.PureComponent {
     this.clearSound    = new Audio('./sounds/clear.mp3')
     this.dropSound     = new Audio('./sounds/drop.mp3')
     this.gameOverSound = new Audio('./sounds/gameover.mp3')
-    this.moveSound.volume     = 0.3
-    this.rotateSound.volume   = 0.4
-    this.clearSound.volume    = 0.5
-    this.dropSound.volume     = 0.1
-    this.gameOverSound.volume = 0.5
+    this.moveSound.volume     = 0.4
+    this.rotateSound.volume   = 0.5
+    this.clearSound.volume    = 0.6
+    this.dropSound.volume     = 0.2
+    this.gameOverSound.volume = 0.6
   }
 
   playSound(name) {
@@ -116,29 +117,51 @@ class Tetris extends React.PureComponent {
     return nextPiece()
   }
 
+  currentSpeed() {
+    return this.SPEED[Math.min(this.state.level - 1, 6)]
+  }
+
   startMovingDown() {
     clearInterval(this.moveDownInterval) // to be sure (<React.StrictMode> and double mounting, I'm looking at you!)
-    this.moveDownInterval = setInterval(this.moveDown.bind(this, false), this.SPEED[Math.min(this.state.level - 1, 6)])
+
+    this.moveDownInterval = setInterval(
+      this.moveDown.bind(this, false),  // false for automatic move (true is manual)
+      this.currentSpeed()
+    )
   }
 
   stopMovingDown() {
     clearInterval(this.moveDownInterval)
   }
 
+  togglePause() {
+    if(this.state.pause) {
+      this.setState({ pause: false }, this.startMovingDown)
+    }
+    else {
+      this.setState({ pause: true }, this.stopMovingDown)
+    }
+  }
+
   bindKeyboard() {
     document.onkeydown = (e) => {
-      if(e.which === 82) { // r
-        this.restart()
+      if(e.which === 80) { // p
+        this.togglePause()
       }
+      else if(!this.state.pause) {
+        if(e.which === 82) { // r
+          this.restart()
+        }
 
-      if(!this.state.gameOver) {
-        switch(e.which) {
-          case 37: this.moveLeft();   break;
-          case 39: this.moveRight();  break;
-          case 38: this.rotate();     break; // up
-          case 40: this.moveDown();   break;
-          case 32: this.moveBottom(); break; // space
-          default: return; // exit this handler for other keys
+        if(!this.state.gameOver) {
+          switch(e.which) {
+            case 37: this.moveLeft();   break;
+            case 39: this.moveRight();  break;
+            case 38: this.rotate();     break; // up
+            case 40: this.moveDown();   break;
+            case 32: this.moveBottom(); break; // space
+            default: return; // exit this handler for other keys
+          }
         }
       }
 
@@ -476,6 +499,7 @@ class Tetris extends React.PureComponent {
         </div>
         { this.renderScore() }
         { this.renderGameOver() }
+        { this.renderPause() }
       </div>
     )
   }
@@ -521,12 +545,26 @@ class Tetris extends React.PureComponent {
   renderGameOver() {
     if(this.state.gameOver) {
       return (
-        <div className="game-over">
-          Game Over
-          <br/>
-          <small>
-            Press 'r' to try again
-          </small>
+        <div className="overlay">
+          <div className="game-over">
+            GAME OVER
+            <small>
+              Press 'r' to try again
+            </small>
+          </div>
+        </div>
+      )
+    }
+  }
+
+  renderPause() {
+    if(this.state.pause) {
+      // small is used to better align vertically
+      return (
+        <div className="overlay">
+          <div className="pause">
+            PAUSED
+          </div>
         </div>
       )
     }
