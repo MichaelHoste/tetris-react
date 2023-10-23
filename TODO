@@ -1,9 +1,10 @@
+* Start droping of pieces above grid (use 3 more rows that are not displayed? Big change! Use OUTERHEIGHT when needed)
+* Title/explanation + forkme logo. https://tetris.80limit.com ReacTris
 * Highlight last piece during merging (temporary keep positions and piece)
   => useful when moving down manually and also when triggering merge with space
-* Start droping of pieces above grid (use 2 more rows that are not displayed? Big change! Use OUTERHEIGHT when needed)
-* Title/explanation + forkme logo. https://tetris.80limit.com ReacTris
+* Don't prevent to rotate on left/right part of game (push left/right to create space to rotate)
 * Dissociate movedown timing, and merge timing!
-* Hold piece (on the left)
 * Pause inputs when clearing lines (should be easy in `clearLines`)
 * Implement T-Spins: https://tetris.wiki/T-Spin
+* Hold piece (on the left)
 * Mobile version
