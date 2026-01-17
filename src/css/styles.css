@@ -10,6 +10,25 @@ body {
   user-select: none;
 }
 
+.title-container {
+  position: absolute;
+  color: #888888;
+  padding: 1em;
+}
+
+.title-container h1 {
+  margin: 0px;
+}
+
+.title-container a {
+  color: #888888;
+  text-decoration: none;
+}
+
+.title-container a:hover {
+  color: white;
+}
+
 /*---------------------------------------------*/
 /* Colors by drawing priority (don't reorder!) */
 /*---------------------------------------------*/
