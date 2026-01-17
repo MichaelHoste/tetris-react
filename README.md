@@ -7,7 +7,7 @@ Play it here: https://tetris-react.80limit.com
 ## But... Why?
 
 I recently saw the [Tetris movie](https://www.rottentomatoes.com/m/tetris) (great one!).
-At one point, the main protagonist recreated Tetris on Game Boy in a very short time span.
+At one point, the protagonist recreated Tetris on Game Boy in a very short time span.
 I wanted to know if that was really possible.
 
 Short answer: **yes**.
