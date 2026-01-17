@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# Tetris-React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Play
 
-## Available Scripts
+Play it here: https://tetris-react.80limit.com
 
-In the project directory, you can run:
+## But... Why?
 
-### `yarn start`
+I recently saw the Tetris movie.
+At one point, the main protagonist recreated Tetris on GameBoy in a very short time span.
+I wanted to know if that was really possible.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Short answer: yes.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Long anwser: not really (cf. Is the game really finished?).
 
-### `yarn test`
+# No I meant... Why in React?
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Oh, right.
 
-### `yarn build`
+My first impulse was to use something like [PixiJS](https://pixijs.com/). It's perfect for creating web games using 2D canvas or WebGL.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+I previously used it to create a web clone of X-Moto (if you had Linux in the 2000s, you know what I'm talking about) and I had a great experience using it.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The drawing API was great, but creating a nice tetris with methods like this seems too much work for a side-project:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```javascript
+let obj = new PIXI.Graphics();
+obj.beginFill(0xff0000);
+obj.drawRect(0, 0, 200, 100);
+app.stage.addChild(obj);
+```
 
-### `yarn eject`
+But then, I realized that if you look close enough, Tetris is not really a "continuous" game with a classic game loop at 60FPS.
+It's more of a discrete game where each redraw is only triggered by:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+ * A tick of the clock (at first, one tick is about 0.8s but it speeds up with the difficulty).
+ * A keyboard input.
+ 
+So rarely more than 2 to 10 redraws per second.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+And each redraw can only do so much change (one tetromino moving or merging), so no need to redraw the full screen, just some cell.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+What web technology would be great to manage a finite state, deal with some keyboard events, and only redraw the part of the screen that changed?
+All of that, using well-known HTML/CSS to iterate quicky on the design?
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Yep, React.
 
-## Learn More
+### Is the game really finished?
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+No, there are many subtleties that make it a truly interesting game and that are not implemented yet. Have you heard of wall kicks, t-spins and the many existing rotation systems?
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Me neither, before this project.
 
-### Code Splitting
+Some of these features are listed in the TODO.md, but I'm a bit afraid that this would make the code a lot less clean.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Isn't it a crime to create a clone of Tetris?
 
-### Analyzing the Bundle Size
+I'm really not sure. I mainly created this project for fun and by extension for educational purpose.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+The rules of Tetris are so ingrained the pop culture, that it makes it a good example of how to create a game from scratch using very popular tools and libraries.
 
-### Making a Progressive Web App
+### How to run it?
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+* Install dependencies: `yarn`
+* Start the game: `yarn start`
+* Play it on [http://localhost:3000](http://localhost:3000)
 
-### Advanced Configuration
+The page will reload when you make changes in the code.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### How to deploy?
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* `yarn build`
+* Copy the content of the newly created `build` directory on a server.
