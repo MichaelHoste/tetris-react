@@ -2,7 +2,7 @@
 
 Play it here: https://tetris-react.80limit.com
 
-![tetris-react](https://github.com/user-attachments/assets/af828148-bd64-4e73-841c-1272a3fc71e3)
+[![tetris-react](https://github.com/user-attachments/assets/af828148-bd64-4e73-841c-1272a3fc71e3)](https://tetris-react.80limit.com)
 
 ## But... Why?
 
