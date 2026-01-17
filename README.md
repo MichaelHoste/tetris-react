@@ -1,26 +1,26 @@
 # Tetris-React
 
-## Play
-
 Play it here: https://tetris-react.80limit.com
 
 ## But... Why?
 
-I recently saw the Tetris movie.
+I recently saw the [Tetris movie](https://www.rottentomatoes.com/m/tetris) (great one!).
 At one point, the main protagonist recreated Tetris on GameBoy in a very short time span.
 I wanted to know if that was really possible.
 
 Short answer: yes.
 
-Long anwser: not really (cf. Is the game really finished?).
+Long anwser: not really (cf. [Is the game really finished?](#is-the-game-really-finished)).
 
-# No I meant... Why in React?
+![It's not perfect, but you'll get the idea](https://raw.githubusercontent.com/MichaelHoste/tetris-react/master/misc/tetris-movie.gif)
 
-Oh, right.
+## No I meant... Why in React?
 
-My first impulse was to use something like [PixiJS](https://pixijs.com/). It's perfect for creating web games using 2D canvas or WebGL.
+Oh, right!
 
-I previously used it to create a web clone of X-Moto (if you had Linux in the 2000s, you know what I'm talking about) and I had a great experience using it.
+My first impulse was to use something like [PixiJS](https://pixijs.com/). It's perfect for creating web games using 2D canvas or WebGL in a game loop.
+
+I previously used it to create a [web clone of X-Moto](https://github.com/MichaelHoste/xmoto.js) (if you had Linux in the 2000s, you know what I'm talking about) and I had a great experience using it.
 
 The drawing API was great, but creating a nice tetris with methods like this seems too much work for a side-project:
 
