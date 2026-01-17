@@ -2,6 +2,8 @@
 
 Play it here: https://tetris-react.80limit.com
 
+https://github.com/user-attachments/assets/dd31eda1-25fd-4afa-9b77-e7fdc611d8b4
+
 ## But... Why?
 
 I recently saw the [Tetris movie](https://www.rottentomatoes.com/m/tetris) (great one!).
@@ -31,7 +33,7 @@ obj.drawRect(0, 0, 200, 100);
 app.stage.addChild(obj);
 ```
 
-But then, I realized that if you look close enough, Tetris is not really a "continuous" game with a classic game loop at 60FPS.
+And then, I realized that if you look close enough, Tetris is not really a "continuous" game with a classic game loop at 60FPS.
 It's more of a discrete game where each redraw is only triggered by:
 
  * A tick of the clock (at first, one tick is about 0.8s but it speeds up with the difficulty).
@@ -41,7 +43,7 @@ So rarely more than 2 to 10 redraws per second.
 
 And each redraw can only do so much change (one tetromino moving or merging), so no need to redraw the full screen, just some cell.
 
-What web technology would be great to manage a finite state, deal with some keyboard events, and only redraw the part of the screen that changed?
+Question: what web technology would be great to manage a finite state, deal with some keyboard events, and only redraw the part of the screen that changed?
 All of that, using well-known HTML/CSS to iterate quicky on the design?
 
 Yep, **React**.
@@ -52,7 +54,7 @@ No, there are many subtleties that make it a truly interesting game and that are
 
 Me neither, before this project.
 
-Some of these features are listed in the TODO.md, but I'm a bit afraid that this would make the code a lot less clean.
+Some of these features are listed in the [TODO.md](TODO.md), but I'm a bit afraid that this would make the code a lot less clean.
 
 ### Is it a crime to create a clone of Tetris?
 
