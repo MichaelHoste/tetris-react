@@ -84,5 +84,5 @@ And so [@didier-84](https://github.com/didier-84) that forked this repository to
 
 It's here: [chocolat-tetris-react](https://github.com/didier-84/chocolate-tetris-react)
 
-<img width="800" alt="image" src="https://github.com/didier-84/chocolate-tetris-react/assets/2227137/d5a0cd4e-2120-4700-bbd5-bb5e744b3d86">
+<img width="640" alt="image" src="https://github.com/didier-84/chocolate-tetris-react/assets/2227137/d5a0cd4e-2120-4700-bbd5-bb5e744b3d86">
 
