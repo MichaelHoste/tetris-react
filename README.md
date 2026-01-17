@@ -2,7 +2,7 @@
 
 Play it here: https://tetris-react.80limit.com
 
-https://github.com/user-attachments/assets/dd31eda1-25fd-4afa-9b77-e7fdc611d8b4
+https://github.com/user-attachments/assets/5dd83bf9-f39a-4028-b596-975cd3c337eb
 
 ## But... Why?
 
