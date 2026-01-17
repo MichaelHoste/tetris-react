@@ -33,8 +33,8 @@ obj.drawRect(0, 0, 200, 100);
 app.stage.addChild(obj);
 ```
 
-And then, I realized that if you look close enough, Tetris is not really a "continuous" game with a classic game loop at 60FPS.
-It's more of a discrete game where each redraw is only triggered by:
+And then, I realized that if you look close enough, Tetris is **not a continuous game** with a classic game loop at 60FPS.
+It's **more of a discrete game** where each redraw is only triggered by:
 
  * A tick of the clock (at first, one tick is about 0.8s, but it speeds up with the difficulty).
  * A keyboard input.
@@ -43,7 +43,7 @@ So rarely more than 2 to 10 redraws per second.
 
 And each redraw can only do so much change (one tetromino moving or merging), so no need to redraw the full screen, just some cells.
 
-Question: what web technology would be great to manage a finite state, deal with some keyboard events, and only redraw the part of the screen that changed?
+**Pop Quizz!** What web technology would be great to manage a finite state, deal with some keyboard events, and only redraw the part of the screen that changed?
 All of that, using well-known HTML/CSS to iterate quickly on the design?
 
 Yep, **React**.
