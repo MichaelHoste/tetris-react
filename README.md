@@ -8,9 +8,9 @@ I recently saw the [Tetris movie](https://www.rottentomatoes.com/m/tetris) (grea
 At one point, the main protagonist recreated Tetris on GameBoy in a very short time span.
 I wanted to know if that was really possible.
 
-Short answer: yes.
+Short answer: **yes**.
 
-Long anwser: not really (cf. [Is the game really finished?](#is-the-game-really-finished)).
+Long anwser: **not really** (see [Is the game really finished?](#is-the-game-really-finished)).
 
 ![It's not perfect, but you'll get the idea](https://raw.githubusercontent.com/MichaelHoste/tetris-react/master/misc/tetris-movie.gif)
 
@@ -44,7 +44,7 @@ And each redraw can only do so much change (one tetromino moving or merging), so
 What web technology would be great to manage a finite state, deal with some keyboard events, and only redraw the part of the screen that changed?
 All of that, using well-known HTML/CSS to iterate quicky on the design?
 
-Yep, React.
+Yep, **React**.
 
 ### Is the game really finished?
 
@@ -54,7 +54,7 @@ Me neither, before this project.
 
 Some of these features are listed in the TODO.md, but I'm a bit afraid that this would make the code a lot less clean.
 
-### Isn't it a crime to create a clone of Tetris?
+### Is it a crime to create a clone of Tetris?
 
 I'm really not sure. I mainly created this project for fun and by extension for educational purpose.
 
